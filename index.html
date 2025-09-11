@@ -6,99 +6,155 @@
   <title>Synkit Tools</title>
   <style>
     body {
-      font-family: 'Courier New', monospace;
-      background: #000000;
-      color: #ff0000;
+      font-family: 'Roboto', sans-serif;
+      background: #000000; /* Black background */
+      color: #FFFFFF; /* White main text */
       margin: 0;
       padding: 0;
       min-height: 100vh;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
     }
     header {
+      width: 100%;
       padding: 20px;
-      font-size: 28px;
-      font-weight: bold;
-      background: rgba(0, 0, 0, 0.8);
-      text-shadow: 0 0 10px #ff0000, 0 0 20px #8b0000;
-      box-shadow: 0 0 15px rgba(139, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.9);
+      text-align: center;
+      font-size: 32px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #00FFFF; /* Cyan headings */
+      text-shadow: 0 0 15px #00FFFF, 0 0 25px #008080;
     }
     .container {
-      max-width: 800px;
-      margin: 20px auto;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
+      max-width: 600px;
+      width: 90%;
+      background: rgba(0, 255, 255, 0.1); /* Cyan-tinted background */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      margin: 20px 0;
+      animation: fadeIn 0.5s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     input, button {
-      padding: 10px;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: 5px;
       border: none;
-      margin: 8px 0;
-      font-size: 15px;
-      background: #1a1a1a;
-      color: #ff0000;
+      font-size: 16px;
+      background: #808080; /* Gray background for inputs/buttons */
+      color: #FFFFFF; /* White text */
+      width: 100%;
+      box-sizing: border-box;
+      margin: 10px 0;
     }
     input {
-      width: 100%;
-      margin-bottom: 12px;
-      border: 1px solid #ff0000;
+      border: 2px solid #00FFFF; /* Cyan border */
+      transition: border-color 0.3s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #008080; /* Deeper teal */
+      box-shadow: 0 0 8px #008080;
     }
     button {
-      background: linear-gradient(45deg, #ff0000, #8b0000);
-      color: white;
+      background: linear-gradient(45deg, #00FFFF, #008080); /* Cyan to teal gradient */
+      color: #FFFFFF;
       cursor: pointer;
-      transition: 0.3s;
+      font-weight: 500;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
     button:hover {
-      background: linear-gradient(45deg, #8b0000, #ff0000);
-      box-shadow: 0 0 10px #ff0000;
+      transform: scale(1.05);
+      box-shadow: 0 0 12px #00FFFF;
     }
     .tool-item {
-      background: rgba(0, 0, 0, 0.6);
-      padding: 12px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px;
       margin: 10px 0;
-      border-radius: 10px;
+      border-radius: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      transition: transform 0.2s;
+    }
+    .tool-item:hover {
+      transform: translateX(5px);
     }
     .tool-item span {
-      font-weight: bold;
+      font-weight: 600;
+      font-size: 18px;
+      color: #FFFFFF; /* White text */
+    }
+    .tool-item a {
+      color: #0000FF; /* Blue for links */
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .tool-item a:hover {
+      text-decoration: underline;
     }
     #searchBox {
-      width: 100%;
-      margin-bottom: 20px;
       padding: 12px;
       font-size: 16px;
-      border-radius: 10px;
+      border-radius: 5px;
     }
     #secretZone {
       position: fixed;
-      bottom: 0;
-      left: 0;
+      bottom: 10px;
+      left: 10px;
       width: 50px;
       height: 50px;
       background: transparent;
       z-index: 1000;
     }
     #loading {
-      display: none;
-      color: #ff0000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-size: 24px;
+      font-weight: 500;
+      color: #FFFFFF; /* White text */
+      text-shadow: 0 0 10px #00FFFF; /* Cyan glow */
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    footer {
+      width: 100%;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.9);
+      text-align: center;
+      font-size: 14px;
+      color: #808080; /* Gray subtext */
+      border-top: 1px solid #00FFFF; /* Cyan border */
+    }
+    footer p {
+      margin: 5px 0;
+    }
+    footer button {
+      width: auto;
+      padding: 10px 20px;
+      margin: 5px;
+      display: inline-block;
     }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>🩸 Synkit Tools 🩸</header>
+  <header>Synkit Tools</header>
 
-  <div id="loading" class="container">⏳ Loading...</div>
-
-  <div id="joinBox" class="container">
-    <h2>📢 Join Our Community</h2>
-    <p>You must join our channel before accessing tools:</p>
-    <p><a href="https://whatsapp.com/channel/0029VbB4AeoF1YlZVNDXUe2v" target="_blank">🔗 Synkit</a></p>
-    <button onclick="proceedToLogin()">✅ I have joined</button>
-  </div>
+  <div id="loading">⏳ Loading...</div>
 
   <div id="loginBox" class="container" style="display:none;">
     <h2>🔑 Enter Access Code</h2>
@@ -114,6 +170,12 @@
 
   <div id="secretZone"></div>
 
+  <footer>
+    <p>Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
+    <button onclick="window.location.href='tel:+233209033293'">Contact Us: +233 20 903 3293</button>
+    <button onclick="window.open('https://wa.me/+233209033293?text=Hello%20bro', '_blank')">Follow Our Channel</button>
+  </footer>
+
   <script>
     const BIN_ID = "68c2fbd943b1c97be93f9a64";
     const API_KEY = "$2a$10$lnxPgBn17zOR3IDXA0JLTu8kBwjfTzQWfFnRxg5Q.B8pAew9/.xgC";
@@ -124,7 +186,7 @@
     let isLoading = true;
 
     async function loadData() {
-      document.getElementById("loading").style.display = "block";
+      document.getElementById("loading").style.display = "flex";
       try {
         let res = await fetch(BIN_URL, { headers: { "X-Master-Key": API_KEY } });
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
@@ -132,35 +194,22 @@
         binData = data.record;
         console.log("✅ Data loaded", binData);
         isLoading = false;
-        showInitialSection();
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("loginBox").style.display = "block";
       } catch (e) {
         console.error("Load failed", e);
-        alert("❌ Failed to load data. Please refresh.");
-      } finally {
+        alert("❌ Failed to load data. Please refresh.", { color: "#FF0000" }); /* Red error */
         document.getElementById("loading").style.display = "none";
       }
     }
 
-    function showInitialSection() {
-      if (localStorage.getItem("joinedCommunity") === "true") {
-        document.getElementById("joinBox").style.display = "none";
-        document.getElementById("loginBox").style.display = "block";
-      }
-    }
-
-    function proceedToLogin() {
-      localStorage.setItem("joinedCommunity", "true");
-      document.getElementById("joinBox").style.display = "none";
-      document.getElementById("loginBox").style.display = "block";
-    }
-
     function checkPassword() {
       if (isLoading) {
-        alert("⏳ Please wait, loading data...");
+        alert("⏳ Please wait, loading data...", { color: "#FFFF00" }); /* Yellow warning */
         return;
       }
       if (!binData) {
-        alert("❌ Data not loaded. Please refresh.");
+        alert("❌ Data not loaded. Please refresh.", { color: "#FF0000" }); /* Red error */
         return;
       }
       let input = document.getElementById("passwordInput").value;
@@ -169,7 +218,7 @@
         document.getElementById("toolSection").style.display = "block";
         renderTools();
       } else {
-        alert("❌ Invalid access code!");
+        alert("❌ Invalid access code!", { color: "#FF0000" }); /* Red error */
       }
     }
 
