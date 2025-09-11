@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synkit Admin Panel</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background: #000000;
+      color: #ff0000;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      text-align: center;
+    }
+    header {
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      background: rgba(0, 0, 0, 0.8);
+      text-shadow: 0 0 10px #ff0000, 0 0 20px #8b0000;
+      box-shadow: 0 0 15px rgba(139, 0, 0, 0.6);
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
+    }
+    input, button {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 8px 0;
+      font-size: 15px;
+      background: #1a1a1a;
+      color: #ff0000;
+    }
+    input {
+      width: 100%;
+      margin-bottom: 12px;
+      border: 1px solid #ff0000;
+    }
+    button {
+      background: linear-gradient(45deg, #ff0000, #8b0000);
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: linear-gradient(45deg, #8b0000, #ff0000);
+      box-shadow: 0 0 10px #ff0000;
+    }
+    .tool-item {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tool-item span {
+      font-weight: bold;
+    }
+    .tool-actions button {
+      margin-left: 5px;
+      padding: 5px 10px;
+      font-size: 13px;
+    }
+    #loading {
+      display: none;
+      color: #ff0000;
+    }
+  </style>
+</head>
+<body>
+  <header>⚙️ Synkit Admin Panel ⚙️</header>
+
+  <div id="loading" class="container">⏳ Loading...</div>
+
+  <div id="loginBox" class="container">
+    <h2>🔑 Enter Synkit Master Key</h2>
+    <input type="password" id="adminPass" placeholder="Enter master key..." aria-label="Master key">
+    <button onclick="checkAdmin()">Unlock Admin</button>
+  </div>
+
+  <div id="adminContent" class="container" style="display:none;">
+    <h2>✅ Welcome, Admin</h2>
+    <button onclick="logout()">Logout</button>
+    <h3>Update Access Code</h3>
+    <input type="text" id="newToolkitPass" placeholder="New access code" aria-label="New access code">
+    <button onclick="updateToolkitPass()">Update Code</button>
+    <h3>Add New Tool</h3>
+    <input type="text" id="toolName" placeholder="Tool name" aria-label="Tool name">
+    <input type="text" id="toolLink" placeholder="Tool link" aria-label="Tool link">
+    <button onclick="addTool()">Add Tool</button>
+    <h3>Manage Tools</h3>
+    <div id="toolsList"></div>
+  </div>
+
+  <script>
+    const BIN_ID = "68c2fbd943b1c97be93f9a64";
+    const API_KEY = "$2a$10$lnxPgBn17zOR3IDXA0JLTu8kBwjfTzQWfFnRxg5Q.B8pAew9/.xgC";
+    const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+    let binData = null;
+    let isLoading = true;
+
+    async function loadData() {
+      document.getElementById("loading").style.display = "block";
+      try {
+        let res = await fetch(BIN_URL, { headers: { "X-Master-Key": API_KEY } });
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        let data = await res.json();
+        binData = data.record;
+        console.log("✅ Data loaded", binData);
+        isLoading = false;
+      } catch (e) {
+        console.error("Load failed", e);
+        alert("❌ Failed to load data. Please refresh.");
+      } finally {
+        document.getElementById("loading").style.display = "none";
+      }
+    }
+
+    function checkAdmin() {
+      if (isLoading) {
+        alert("⏳ Please wait, loading data...");
+        return;
+      }
+      if (!binData) {
+        alert("❌ Data not loaded. Please refresh.");
+        return;
+      }
+      let input = document.getElementById("adminPass").value;
+      if (input === binData.keys.admin) {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("adminContent").style.display = "block";
+        renderTools();
+      } else {
+        alert("❌ Invalid master key!");
+      }
+    }
+
+    async function updateToolkitPass() {
+      if (isLoading) {
+        alert("⏳ Please wait, loading data...");
+        return;
+      }
+      let newPass = document.getElementById("newToolkitPass").value.trim();
+      if (!newPass) return alert("Enter a new access code");
+      binData.keys.toolkit = newPass;
+      await saveData("✅ Access code updated!");
+      document.getElementById("newToolkitPass").value = "";
+    }
+
+    async function addTool() {
+      if (isLoading) {
+        alert("⏳ Please wait, loading data...");
+        return;
+      }
+      let name = document.getElementById("toolName").value.trim();
+      let link = document.getElementById("toolLink").value.trim();
+      if (!name || !link) return alert("Enter both name and link");
+      if (!/^https?:\/\/.+/.test(link)) return alert("Enter a valid URL starting with http:// or https://");
+      if (binData.tools.some(t => t.name === name)) return alert("Tool name already exists");
+      binData.tools.push({ name, link });
+      await saveData("✅ Tool added!");
+      document.getElementById("toolName").value = "";
+      document.getElementById("toolLink").value = "";
+      renderTools();
+    }
+
+    async function editTool(index) {
+      let newName = prompt("Enter new name:", binData.tools[index].name);
+      let newLink = prompt("Enter new link:", binData.tools[index].link);
+      if (newName && newLink) {
+        if (!/^https?:\/\/.+/.test(newLink)) return alert("Enter a valid URL starting with http:// or https://");
+        if (binData.tools.some((t, i) => i !== index && t.name === newName)) return alert("Tool name already exists");
+        binData.tools[index].name = newName;
+        binData.tools[index].link = newLink;
+        await saveData("✅ Tool updated!");
+        renderTools();
+      }
+    }
+
+    async function deleteTool(index) {
+      if (confirm("Are you sure you want to delete this tool?")) {
+        binData.tools.splice(index, 1);
+        await saveData("✅ Tool deleted!");
+        renderTools();
+      }
+    }
+
+    async function saveData(msg) {
+      try {
+        const response = await fetch(BIN_URL, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key": API_KEY
+          },
+          body: JSON.stringify(binData)
+        });
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        alert(msg);
+      } catch (e) {
+        alert(`❌ Update failed: ${e.message}`);
+      }
+    }
+
+    function renderTools() {
+      let container = document.getElementById("toolsList");
+      container.innerHTML = "";
+      binData.tools.forEach((t, i) => {
+        container.innerHTML += `
+          <div class="tool-item">
+            <span>${t.name}</span>
+            <div class="tool-actions">
+              <button onclick="editTool(${i})">✏️ Edit</button>
+              <button onclick="deleteTool(${i})">🗑 Delete</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function logout() {
+      document.getElementById("adminContent").style.display = "none";
+      document.getElementById("loginBox").style.display = "block";
+      document.getElementById("adminPass").value = "";
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
