@@ -80,25 +80,24 @@
       margin: 10px 0;
       border-radius: 8px;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       transition: transform 0.2s;
     }
     .tool-item:hover {
       transform: translateX(5px);
     }
-    .tool-item span {
+    .tool-item button {
+      background: linear-gradient(45deg, #00FFFF, #008080); /* Cyan to teal */
       font-weight: 600;
       font-size: 18px;
-      color: #FFFFFF; /* White text */
+      padding: 10px;
+      width: 100%;
+      text-align: center;
     }
-    .tool-item a {
-      color: #0000FF; /* Blue for links */
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .tool-item a:hover {
-      text-decoration: underline;
+    .tool-item button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px #00FFFF;
     }
     #searchBox {
       padding: 12px;
@@ -228,8 +227,7 @@
       filteredTools.forEach(t => {
         container.innerHTML += `
           <div class="tool-item">
-            <span>${t.name}</span>
-            <a href="${t.link}" target="_blank">🔗 Open</a>
+            <button onclick="window.open('${t.link}', '_blank')">${t.name}</button>
           </div>
         `;
       });
