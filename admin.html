@@ -1,309 +1,313 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Synkit Admin Panel</title>
-  <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      background: #000000; /* Black background */
-      color: #FFFFFF; /* White main text */
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-    }
-    header {
-      width: 100%;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.9);
-      text-align: center;
-      font-size: 32px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: #00FFFF; /* Cyan headings */
-      text-shadow: 0 0 15px #00FFFF, 0 0 25px #008080;
-    }
-    .container {
-      max-width: 600px;
-      width: 90%;
-      background: rgba(0, 255, 255, 0.1); /* Cyan-tinted background */
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-      margin: 20px 0;
-      animation: fadeIn 0.5s ease-in;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    input, button {
-      padding: 12px;
-      border-radius: 5px;
-      border: none;
-      font-size: 16px;
-      background: #808080; /* Gray background for inputs/buttons */
-      color: #FFFFFF; /* White text */
-      width: 100%;
-      box-sizing: border-box;
-      margin: 10px 0;
-    }
-    input {
-      border: 2px solid #00FFFF; /* Cyan border */
-      transition: border-color 0.3s;
-    }
-    input:focus {
-      outline: none;
-      border-color: #008080; /* Deeper teal */
-      box-shadow: 0 0 8px #008080;
-    }
-    button {
-      background: linear-gradient(45deg, #00FFFF, #008080); /* Cyan to teal gradient */
-      color: #FFFFFF;
-      cursor: pointer;
-      font-weight: 500;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 12px #00FFFF;
-    }
-    .tool-item {
-      background: rgba(0, 0, 0, 0.7);
-      padding: 15px;
-      margin: 10px 0;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: transform 0.2s;
-    }
-    .tool-item:hover {
-      transform: translateX(5px);
-    }
-    .tool-item span {
-      font-weight: 600;
-      font-size: 18px;
-      color: #FFFFFF; /* White text */
-    }
-    .tool-actions button {
-      margin-left: 10px;
-      padding: 8px 12px;
-      font-size: 14px;
-      background: linear-gradient(45deg, #00FFFF, #008080); /* Cyan to teal */
-    }
-    .tool-actions button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 10px #00FFFF;
-    }
-    #loading {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-size: 24px;
-      font-weight: 500;
-      color: #FFFFFF; /* White text */
-      text-shadow: 0 0 10px #00FFFF; /* Cyan glow */
-      animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    footer {
-      width: 100%;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.9);
-      text-align: center;
-      font-size: 14px;
-      color: #808080; /* Gray subtext */
-      border-top: 1px solid #00FFFF; /* Cyan border */
-    }
-    footer p {
-      margin: 5px 0;
-    }
-    footer button {
-      width: auto;
-      padding: 10px 20px;
-      margin: 5px;
-      display: inline-block;
-    }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synkit Admin Panel</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #000000;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+        header {
+            width: 100%;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #00FFFF;
+            text-shadow: 0 0 15px #00FFFF, 0 0 25px #008080;
+        }
+        .container {
+            max-width: 600px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            margin: 20px 0;
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        input, button {
+            padding: 12px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+            background: #808080;
+            color: #FFFFFF;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 10px 0;
+        }
+        input {
+            border: 2px solid #00FFFF;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #008080;
+            box-shadow: 0 0 8px #008080;
+        }
+        button {
+            background: linear-gradient(45deg, #00FFFF, #008080);
+            color: #FFFFFF;
+            cursor: pointer;
+            font-weight: 500;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 12px #00FFFF;
+        }
+        .tool-item {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .tool-item:hover {
+            transform: translateX(5px);
+        }
+        .tool-item span {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        .tool-actions button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            font-size: 14px;
+            background: linear-gradient(45deg, #00FFFF, #008080);
+        }
+        .tool-actions button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px #00FFFF;
+        }
+        #loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 24px;
+            font-weight: 500;
+            color: #FFFFFF;
+            text-shadow: 0 0 10px #00FFFF;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        footer {
+            width: 100%;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            text-align: center;
+            font-size: 14px;
+            color: #808080;
+            border-top: 1px solid #00FFFF;
+        }
+        footer p {
+            margin: 5px 0;
+        }
+        footer button {
+            width: auto;
+            padding: 10px 20px;
+            margin: 5px;
+            display: inline-block;
+            background: linear-gradient(45deg, #00FFFF, #008080);
+        }
+        footer button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 12px #00FFFF;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>Synkit Admin Panel</header>
+    <header>Synkit Admin Panel</header>
 
-  <div id="loading">⏳ Loading...</div>
+    <div id="loading">⏳ Loading...</div>
 
-  <div id="loginBox" class="container">
-    <h2>🔑 Enter Synkit Master Key</h2>
-    <input type="password" id="adminPass" placeholder="Enter master key..." aria-label="Master key">
-    <button onclick="checkAdmin()">Unlock Admin</button>
-  </div>
+    <div id="loginBox" class="container">
+        <h2>🔑 Enter Master Key</h2>
+        <input type="password" id="adminPass" placeholder="Enter master key..." aria-label="Master key">
+        <button onclick="checkAdmin()">Unlock Admin</button>
+    </div>
 
-  <div id="adminContent" class="container" style="display:none;">
-    <h2>✅ Welcome, Admin</h2>
-    <button onclick="logout()">Logout</button>
-    <h3>Update Access Code</h3>
-    <input type="text" id="newToolkitPass" placeholder="New access code" aria-label="New access code">
-    <button onclick="updateToolkitPass()">Update Code</button>
-    <h3>Add New Tool</h3>
-    <input type="text" id="toolName" placeholder="Tool name" aria-label="Tool name">
-    <input type="text" id="toolLink" placeholder="Tool link" aria-label="Tool link">
-    <button onclick="addTool()">Add Tool</button>
-    <h3>Manage Tools</h3>
-    <div id="toolsList"></div>
-  </div>
+    <div id="adminContent" class="container" style="display:none;">
+        <h2>✅ Welcome, Admin</h2>
+        <button onclick="logout()">Logout</button>
+        <h3>Update Access Code</h3>
+        <input type="text" id="newToolkitPass" placeholder="New access code" aria-label="New access code">
+        <button onclick="updateToolkitPass()">Update Code</button>
+        <h3>Add New Tool</h3>
+        <input type="text" id="toolName" placeholder="Tool name" aria-label="Tool name">
+        <input type="text" id="toolLink" placeholder="Tool link" aria-label="Tool link">
+        <button onclick="addTool()">Add Tool</button>
+        <h3>Manage Tools</h3>
+        <div id="toolsList"></div>
+    </div>
 
-  <footer>
-    <p>Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
-    <button onclick="window.open('https://wa.me/+233209033293?text=Hello%20bro', '_blank')">Contact Us: +233 20 903 3293</button>
-    <button onclick="window.open('https://wa.me/+233209033293?text=Hello%20bro', '_blank')">Follow Our Channel</button>
-  </footer>
+    <footer>
+        <p>Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
+        <button onclick="window.open('https://wa.me/+233209033293?text=Hello%20bro', '_blank')">Contact Us: +233 20 903 3293</button>
+        <button onclick="window.open('https://whatsapp.com/channel/0029VbB4AeoF1YlZVNDXUe2v')">Follow Our Channel</button>
+    </footer>
 
-  <script>
-    const BIN_ID = "68c5601243b1c97be941ab4e";
-    const API_KEY = "$$2a$10$BJ8yiSLxN4FCKzCROuL.ReaLVp9LHnkIs1veCmrKNem/1SEoOTwBi";
-    const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-    let binData = null;
-    let isLoading = true;
+    <script>
+        const BIN_ID = "68c594c143b1c97be941e086"; // Updated BIN_ID
+        const API_KEY = "$2a$10$eUZ7SJvj.U.Qyt/ckC6qUOSLgjgAmrnPhuoAMdkA38SwyHdJf86FW"; // Updated API_KEY
+        const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+        let binData = null;
+        let isLoading = true;
 
-    async function loadData() {
-      document.getElementById("loading").style.display = "flex";
-      try {
-        let res = await fetch(BIN_URL, { headers: { "X-Master-Key": API_KEY } });
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        let data = await res.json();
-        binData = data.record;
-        console.log("✅ Data loaded", binData);
-        isLoading = false;
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("loginBox").style.display = "block";
-      } catch (e) {
-        console.error("Load failed", e);
-        alert("❌ Failed to load data. Please refresh.", { color: "#FF0000" }); /* Red error */
-        document.getElementById("loading").style.display = "none";
-      }
-    }
+        async function loadData() {
+            document.getElementById("loading").style.display = "flex";
+            try {
+                let res = await fetch(BIN_URL, { headers: { "X-Master-Key": API_KEY } });
+                if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+                let data = await res.json();
+                binData = data.record;
+                console.log("✅ Data loaded", binData);
+                isLoading = false;
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("loginBox").style.display = "block";
+            } catch (e) {
+                console.error("Load failed", e);
+                alert("❌ Failed to load data. Please refresh.", { color: "#FF0000" });
+                document.getElementById("loading").style.display = "none";
+            }
+        }
 
-    function checkAdmin() {
-      if (isLoading) {
-        alert("⏳ Please wait, loading data...", { color: "#FFFF00" }); /* Yellow warning */
-        return;
-      }
-      if (!binData) {
-        alert("❌ Data not loaded. Please refresh.", { color: "#FF0000" }); /* Red error */
-        return;
-      }
-      let input = document.getElementById("adminPass").value;
-      if (input === binData.keys.admin) {
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("adminContent").style.display = "block";
-        renderTools();
-      } else {
-        alert("❌ Invalid master key!", { color: "#FF0000" }); /* Red error */
-      }
-    }
+        function checkAdmin() {
+            if (isLoading) {
+                alert("⏳ Please wait, loading data...", { color: "#FFFF00" });
+                return;
+            }
+            if (!binData) {
+                alert("❌ Data not loaded. Please refresh.", { color: "#FF0000" });
+                return;
+            }
+            let input = document.getElementById("adminPass").value;
+            if (input === binData.keys.admin) {
+                document.getElementById("loginBox").style.display = "none";
+                document.getElementById("adminContent").style.display = "block";
+                renderTools();
+            } else {
+                alert("❌ Invalid master key!", { color: "#FF0000" });
+            }
+        }
 
-    async function updateToolkitPass() {
-      if (isLoading) {
-        alert("⏳ Please wait, loading data...", { color: "#FFFF00" }); /* Yellow warning */
-        return;
-      }
-      let newPass = document.getElementById("newToolkitPass").value.trim();
-      if (!newPass) return alert("Enter a new access code", { color: "#FFFF00" }); /* Yellow warning */
-      binData.keys.toolkit = newPass;
-      await saveData("✅ Access code updated!", "#00FF00"); /* Green success */
-      document.getElementById("newToolkitPass").value = "";
-    }
+        async function updateToolkitPass() {
+            if (isLoading) {
+                alert("⏳ Please wait, loading data...", { color: "#FFFF00" });
+                return;
+            }
+            let newPass = document.getElementById("newToolkitPass").value.trim();
+            if (!newPass) return alert("Enter a new access code", { color: "#FFFF00" });
+            binData.keys.toolkit = newPass;
+            await saveData("✅ Access code updated!", "#00FF00");
+            document.getElementById("newToolkitPass").value = "";
+        }
 
-    async function addTool() {
-      if (isLoading) {
-        alert("⏳ Please wait, loading data...", { color: "#FFFF00" }); /* Yellow warning */
-        return;
-      }
-      let name = document.getElementById("toolName").value.trim();
-      let link = document.getElementById("toolLink").value.trim();
-      if (!name || !link) return alert("Enter both name and link", { color: "#FFFF00" }); /* Yellow warning */
-      if (!/^https?:\/\/.+/.test(link)) return alert("Enter a valid URL starting with http:// or https://", { color: "#FFFF00" }); /* Yellow warning */
-      if (binData.tools.some(t => t.name === name)) return alert("Tool name already exists", { color: "#FFFF00" }); /* Yellow warning */
-      binData.tools.push({ name, link });
-      await saveData("✅ Tool added!", "#00FF00"); /* Green success */
-      document.getElementById("toolName").value = "";
-      document.getElementById("toolLink").value = "";
-      renderTools();
-    }
+        async function addTool() {
+            if (isLoading) {
+                alert("⏳ Please wait, loading data...", { color: "#FFFF00" });
+                return;
+            }
+            let name = document.getElementById("toolName").value.trim();
+            let link = document.getElementById("toolLink").value.trim();
+            if (!name || !link) return alert("Enter both name and link", { color: "#FFFF00" });
+            if (!/^https?:\/\/.+/.test(link)) return alert("Enter a valid URL starting with http:// or https://", { color: "#FFFF00" });
+            if (binData.tools.some(t => t.name === name)) return alert("Tool name already exists", { color: "#FFFF00" });
+            binData.tools.push({ name, link });
+            await saveData("✅ Tool added!", "#00FF00");
+            document.getElementById("toolName").value = "";
+            document.getElementById("toolLink").value = "";
+            renderTools();
+        }
 
-    async function editTool(index) {
-      let newName = prompt("Enter new name:", binData.tools[index].name);
-      let newLink = prompt("Enter new link:", binData.tools[index].link);
-      if (newName && newLink) {
-        if (!/^https?:\/\/.+/.test(newLink)) return alert("Enter a valid URL starting with http:// or https://", { color: "#FFFF00" }); /* Yellow warning */
-        if (binData.tools.some((t, i) => i !== index && t.name === newName)) return alert("Tool name already exists", { color: "#FFFF00" }); /* Yellow warning */
-        binData.tools[index].name = newName;
-        binData.tools[index].link = newLink;
-        await saveData("✅ Tool updated!", "#00FF00"); /* Green success */
-        renderTools();
-      }
-    }
+        async function editTool(index) {
+            let newName = prompt("Enter new name:", binData.tools[index].name);
+            let newLink = prompt("Enter new link:", binData.tools[index].link);
+            if (newName && newLink) {
+                if (!/^https?:\/\/.+/.test(newLink)) return alert("Enter a valid URL starting with http:// or https://", { color: "#FFFF00" });
+                if (binData.tools.some((t, i) => i !== index && t.name === newName)) return alert("Tool name already exists", { color: "#FFFF00" });
+                binData.tools[index].name = newName;
+                binData.tools[index].link = newLink;
+                await saveData("✅ Tool updated!", "#00FF00");
+                renderTools();
+            }
+        }
 
-    async function deleteTool(index) {
-      if (confirm("Are you sure you want to delete this tool?")) {
-        binData.tools.splice(index, 1);
-        await saveData("✅ Tool deleted!", "#00FF00"); /* Green success */
-        renderTools();
-      }
-    }
+        async function deleteTool(index) {
+            if (confirm("Are you sure you want to delete this tool?")) {
+                binData.tools.splice(index, 1);
+                await saveData("✅ Tool deleted!", "#00FF00");
+                renderTools();
+            }
+        }
 
-    async function saveData(msg, color) {
-      try {
-        const response = await fetch(BIN_URL, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Master-Key": API_KEY
-          },
-          body: JSON.stringify(binData)
-        });
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        alert(msg, { color }); /* Use specified color */
-      } catch (e) {
-        alert(`❌ Update failed: ${e.message}`, { color: "#FF0000" }); /* Red error */
-      }
-    }
+        async function saveData(msg, color) {
+            try {
+                const response = await fetch(BIN_URL, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": API_KEY
+                    },
+                    body: JSON.stringify(binData)
+                });
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                alert(msg, { color });
+            } catch (e) {
+                alert(`❌ Update failed: ${e.message}`, { color: "#FF0000" });
+            }
+        }
 
-    function renderTools() {
-      let container = document.getElementById("toolsList");
-      container.innerHTML = "";
-      binData.tools.forEach((t, i) => {
-        container.innerHTML += `
-          <div class="tool-item">
-            <span>${t.name}</span>
-            <div class="tool-actions">
-              <button onclick="editTool(${i})">✏️ Edit</button>
-              <button onclick="deleteTool(${i})">🗑 Delete</button>
-            </div>
-          </div>
-        `;
-      });
-    }
+        function renderTools() {
+            let container = document.getElementById("toolsList");
+            container.innerHTML = "";
+            binData.tools.forEach((t, i) => {
+                container.innerHTML += `
+                    <div class="tool-item">
+                        <span>${t.name}</span>
+                        <div class="tool-actions">
+                            <button onclick="editTool(${i})">✏️ Edit</button>
+                            <button onclick="deleteTool(${i})">🗑 Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
 
-    function logout() {
-      document.getElementById("adminContent").style.display = "none";
-      document.getElementById("loginBox").style.display = "block";
-      document.getElementById("adminPass").value = "";
-    }
+        function logout() {
+            document.getElementById("adminContent").style.display = "none";
+            document.getElementById("loginBox").style.display = "block";
+            document.getElementById("adminPass").value = "";
+        }
 
-    loadData();
-  </script>
+        loadData();
+    </script>
 </body>
 </html>
