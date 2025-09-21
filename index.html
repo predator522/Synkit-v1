@@ -4,134 +4,159 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Synkit Tools</title>
-;
- <style>
+<style>
     body {
         font-family: 'Roboto', sans-serif;
-        background:#000;
-        color:#fff;
-        margin:0;
-        padding:0;
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        min-height:100vh;
+        background: linear-gradient(135deg, #2b003d, #1a1a2e, #3b0a54);
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
     }
     header {
-        width:100%;
-        padding:20px;
-        background:rgba(0,0,0,0.9);
-        text-align:center;
-        font-size:32px;
-        font-weight:700;
-        color:#00FFFF;
-        text-shadow:0 0 15px #00FFFF,0 0 25px #008080;
-        border-bottom-left-radius:30px;
-        border-bottom-right-radius:30px;
+        width: 100%;
+        padding: 20px;
+        background: linear-gradient(90deg, #6a0dad, #00bfff);
+        text-align: center;
+        font-size: 32px;
+        font-weight: 700;
+        color: #fff;
+        text-shadow: 0 0 10px #fff, 0 0 20px #6a0dad;
+        border-bottom-left-radius: 40px;
+        border-bottom-right-radius: 40px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
     .container {
-        max-width:700px;
-        width:90%;
-        background:rgba(255,255,255,0.05);
-        padding:20px;
-        border-radius:30px;
-        margin:20px 0;
-        box-shadow:0 0 20px rgba(0,255,255,0.3);
+        max-width: 700px;
+        width: 90%;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 25px;
+        border-radius: 50px;
+        margin: 20px 0;
+        box-shadow: 0 0 25px rgba(106, 13, 173, 0.5);
+        backdrop-filter: blur(10px);
     }
     input, button {
-        width:100%;
-        padding:14px;
-        margin:10px 0;
-        border-radius:50px; /* Pill shape */
-        font-size:16px;
-        box-sizing:border-box;
+        width: 100%;
+        padding: 14px;
+        margin: 10px 0;
+        border-radius: 50px;
+        font-size: 16px;
+        box-sizing: border-box;
     }
     input {
-        border:2px solid #00FFFF;
-        background:#111;
-        color:#fff;
-        transition:border-color 0.3s, box-shadow 0.3s;
+        border: 2px solid #6a0dad;
+        background: rgba(255,255,255,0.05);
+        color: #fff;
+        transition: border-color 0.3s, box-shadow 0.3s;
     }
     input:focus {
-        outline:none;
-        border-color:#008080;
-        box-shadow:0 0 12px #00FFFF;
+        outline: none;
+        border-color: #00bfff;
+        box-shadow: 0 0 12px #00bfff;
     }
     button {
-        background:linear-gradient(45deg,#00FFFF,#008080);
-        color:#fff;
-        border:none;
-        cursor:pointer;
-        font-weight:500;
-        transition:0.2s;
+        background: linear-gradient(45deg, #6a0dad, #00bfff);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        transition: 0.3s;
+        box-shadow: 0 0 12px rgba(0,191,255,0.5);
     }
     button:hover {
-        transform:scale(1.05);
-        box-shadow:0 0 12px #00FFFF;
+        transform: scale(1.05);
+        box-shadow: 0 0 18px rgba(0,191,255,0.8);
     }
     .category {
-        background: rgba(0, 255, 255, 0.1);
-        margin:8px 0;
-        padding:12px 20px;
-        border-radius:50px; /* Oval look */
-        cursor:pointer;
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        transition:0.3s;
+        background: rgba(255,255,255,0.1);
+        margin: 8px 0;
+        padding: 14px 20px;
+        border-radius: 50px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: 0.3s;
+        box-shadow: 0 0 10px rgba(106,13,173,0.3);
     }
     .category:hover {
-        background: rgba(0, 255, 255, 0.25);
-        box-shadow:0 0 12px #00FFFF;
+        background: rgba(255,255,255,0.2);
+        box-shadow: 0 0 20px rgba(0,191,255,0.6);
     }
     .category-name {
-        font-weight:600;
-        font-size:18px;
+        font-weight: 600;
+        font-size: 18px;
     }
     .tools {
-        display:none;
+        display: none;
         flex-direction: column;
-        margin-top:8px;
+        margin-top: 8px;
     }
     .tool-item {
-        margin:5px 0;
+        margin: 5px 0;
     }
     .tool-item button {
-        border-radius:50px; /* Pill-shaped */
-        padding:10px 20px;
-        font-weight:500;
-        font-size:16px;
+        border-radius: 50px;
+        padding: 12px 20px;
+        font-weight: 500;
+        font-size: 16px;
+        background: linear-gradient(45deg, #00bfff, #6a0dad);
+        box-shadow: 0 0 10px rgba(106,13,173,0.5);
+        transition: 0.3s;
     }
     .tool-item button:hover {
         transform: scale(1.05);
-        box-shadow:0 0 10px #00FFFF;
+        box-shadow: 0 0 20px rgba(0,191,255,0.8);
     }
     #modal {
-        display:none;
-        position:fixed;
-        top:0;
-        left:0;
-        width:100%;
-        height:100%;
-        background:rgba(0,0,0,0.9);
-        justify-content:center;
-        align-items:center;
-        color:#fff;
-        padding:20px;
-        box-sizing:border-box;
-        z-index:1000;
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.95);
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        padding: 20px;
+        box-sizing: border-box;
+        z-index: 1000;
     }
     #modalContent {
-        background:#111;
-        padding:20px;
-        border-radius:30px;
-        max-width:600px;
-        max-height:80vh;
-        overflow-y:auto;
-        white-space:pre-wrap;
-        box-shadow:0 0 20px #00FFFF;
+        background: rgba(255,255,255,0.05);
+        padding: 25px;
+        border-radius: 50px;
+        max-width: 600px;
+        max-height: 80vh;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        box-shadow: 0 0 25px rgba(0,191,255,0.5);
     }
- </style>
+    #loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-size: 24px;
+        font-weight: 500;
+        color: #fff;
+        text-shadow: 0 0 10px #6a0dad;
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);} }
+    footer {
+        width: 100%;
+        padding: 20px;
+        background: rgba(0,0,0,0.9);
+        text-align: center;
+        font-size: 14px;
+        color: #ccc;
+        border-top: 1px solid #6a0dad;
+    }
+</style>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -197,11 +222,10 @@ function renderCategories(){
     const container=document.getElementById("categoriesList");
     container.innerHTML="";
     binData.categories.forEach(cat=>{
-        // Category container
         let catDiv=document.createElement("div");
         catDiv.className="category";
         catDiv.innerHTML=`<span class="category-name">${cat.name}</span><span>▼</span>`;
-        // Tools container
+
         let toolsDiv=document.createElement("div");
         toolsDiv.className="tools";
         cat.tools.forEach(tool=>{
@@ -217,10 +241,11 @@ function renderCategories(){
             toolDiv.appendChild(btn);
             toolsDiv.appendChild(toolDiv);
         });
+
         catDiv.onclick=()=>{
-            const isVisible = toolsDiv.style.display==="flex";
-            toolsDiv.style.display = isVisible ? "none" : "flex";
+            toolsDiv.style.display = toolsDiv.style.display==="flex" ? "none" : "flex";
         };
+
         container.appendChild(catDiv);
         container.appendChild(toolsDiv);
     });
