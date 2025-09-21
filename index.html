@@ -5,176 +5,229 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Synkit Tools</title>
 <style>
-    body, html {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        font-family: 'Roboto', sans-serif;
-        background: linear-gradient(to bottom, #2b003d 0%, #1a1a2e 60%, #3b0a54 100%);
-        color: #fff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    header {
-        width: 100%;
-        padding: 20px;
-        background: linear-gradient(90deg, #6a0dad, #00bfff);
-        text-align: center;
-        font-size: 32px;
-        font-weight: 700;
-        color: #fff;
-        text-shadow: 0 0 10px #fff, 0 0 20px #6a0dad;
-        border-bottom-left-radius: 40px;
-        border-bottom-right-radius: 40px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        position: absolute;
-        top: 0;
-    }
-    .container {
-        width: 90%;
-        max-width: 700px;
-        background: rgba(255, 255, 255, 0.05);
-        padding: 25px;
-        border-radius: 50px;
-        box-shadow: 0 0 25px rgba(106, 13, 173, 0.5);
-        backdrop-filter: blur(10px);
-    }
-    input, button {
-        width: 100%;
-        padding: 14px;
-        margin: 10px 0;
-        border-radius: 50px;
-        font-size: 16px;
-        box-sizing: border-box;
-    }
-    input {
-        border: 2px solid #6a0dad;
-        background: rgba(255,255,255,0.05);
-        color: #fff;
-        transition: border-color 0.3s, box-shadow 0.3s;
-    }
-    input:focus {
-        outline: none;
-        border-color: #00bfff;
-        box-shadow: 0 0 12px #00bfff;
-    }
-    button {
-        background: linear-gradient(45deg, #6a0dad, #00bfff);
-        color: #fff;
-        border: none;
-        cursor: pointer;
-        font-weight: 500;
-        transition: 0.3s;
-        box-shadow: 0 0 12px rgba(0,191,255,0.5);
-    }
-    button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 18px rgba(0,191,255,0.8);
-    }
-    .category {
-        background: rgba(255,255,255,0.1);
-        margin: 8px 0;
-        padding: 14px 20px;
-        border-radius: 50px;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: 0.3s;
-        box-shadow: 0 0 10px rgba(106,13,173,0.3);
-    }
-    .category:hover {
-        background: rgba(255,255,255,0.2);
-        box-shadow: 0 0 20px rgba(0,191,255,0.6);
-    }
-    .category-name {
-        font-weight: 600;
-        font-size: 18px;
-    }
-    .tools {
-        display: none;
-        flex-direction: column;
-        margin-top: 8px;
-    }
-    .tool-item {
-        margin: 5px 0;
-    }
-    .tool-item button {
-        border-radius: 50px;
-        padding: 12px 20px;
-        font-weight: 500;
-        font-size: 16px;
-        background: linear-gradient(45deg, #00bfff, #6a0dad);
-        box-shadow: 0 0 10px rgba(106,13,173,0.5);
-        transition: 0.3s;
-    }
-    .tool-item button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 20px rgba(0,191,255,0.8);
-    }
-    #modal {
-        display: none;
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.95);
-        justify-content: center;
-        align-items: center;
-        color: #fff;
-        padding: 20px;
-        box-sizing: border-box;
-        z-index: 1000;
-    }
-    #modalContent {
-        background: rgba(255,255,255,0.05);
-        padding: 25px;
-        border-radius: 50px;
-        max-width: 600px;
-        max-height: 80vh;
-        overflow-y: auto;
-        white-space: pre-wrap;
-        box-shadow: 0 0 25px rgba(0,191,255,0.5);
-    }
-    #loading {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        font-size: 24px;
-        font-weight: 500;
-        color: #fff;
-        text-shadow: 0 0 10px #6a0dad;
-        animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse { 0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);} }
-    footer {
-        width: 100%;
-        padding: 20px;
-        background: rgba(0,0,0,0.9);
-        text-align: center;
-        font-size: 14px;
-        color: #ccc;
-        border-top: 1px solid #6a0dad;
-        position: absolute;
-        bottom: 0;
-    }
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to bottom, #2b003d 0%, #1a1a2e 60%, #3b0a54 100%);
+    color: #fff;
+    overflow-x: hidden;
+}
+
+.background-wrapper {
+    position: fixed;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #2b003d 0%, #1a1a2e 60%, #3b0a54 100%);
+    z-index: -1;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+header {
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(90deg, #6a0dad, #00bfff);
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 10px #fff, 0 0 20px #6a0dad;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 700px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 25px;
+    border-radius: 50px;
+    box-shadow: 0 0 25px rgba(106, 13, 173, 0.5);
+    backdrop-filter: blur(10px);
+    margin-top: 100px;
+}
+
+input, button {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    border-radius: 50px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+input {
+    border: 2px solid #6a0dad;
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #00bfff;
+    box-shadow: 0 0 12px #00bfff;
+}
+
+button {
+    background: linear-gradient(45deg, #6a0dad, #00bfff);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+    box-shadow: 0 0 12px rgba(0,191,255,0.5);
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 18px rgba(0,191,255,0.8);
+}
+
+.category {
+    background: rgba(255,255,255,0.1);
+    margin: 8px 0;
+    padding: 14px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+    box-shadow: 0 0 10px rgba(106,13,173,0.3);
+}
+
+.category:hover {
+    background: rgba(255,255,255,0.2);
+    box-shadow: 0 0 20px rgba(0,191,255,0.6);
+}
+
+.category-name {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.tools {
+    display: none;
+    flex-direction: column;
+    margin-top: 8px;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+.tool-item {
+    margin: 5px 0;
+}
+
+.tool-item button {
+    border-radius: 50px;
+    padding: 12px 20px;
+    font-weight: 500;
+    font-size: 16px;
+    background: linear-gradient(45deg, #00bfff, #6a0dad);
+    box-shadow: 0 0 10px rgba(106,13,173,0.5);
+    transition: 0.3s;
+}
+
+.tool-item button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0,191,255,0.8);
+}
+
+#modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.95);
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+#modalContent {
+    background: rgba(255,255,255,0.05);
+    padding: 25px;
+    border-radius: 50px;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    box-shadow: 0 0 25px rgba(0,191,255,0.5);
+}
+
+#loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 24px;
+    font-weight: 500;
+    color: #fff;
+    text-shadow: 0 0 10px #6a0dad;
+    animation: pulse 1.5s infinite;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+@keyframes pulse { 0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);} }
+
+footer {
+    width: 100%;
+    padding: 20px;
+    background: rgba(0,0,0,0.9);
+    text-align: center;
+    font-size: 14px;
+    color: #ccc;
+    border-top: 1px solid #6a0dad;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
 </style>
 </head>
 <body>
+<div class="background-wrapper"></div>
 <header>Synkit Tools</header>
 
-<div id="loading">⏳ Loading...</div>
+<div class="container-wrapper">
+    <div id="loginBox" class="container">
+        <h2>🔑 Enter Access Code</h2>
+        <input type="password" id="passwordInput" placeholder="Enter access code...">
+        <button onclick="checkPassword()">🔓 Unlock</button>
+    </div>
 
-<div id="loginBox" class="container" style="display:none;">
-    <h2>🔑 Enter Access Code</h2>
-    <input type="password" id="passwordInput" placeholder="Enter access code..." aria-label="Access code">
-    <button onclick="checkPassword()">🔓 Unlock</button>
-</div>
-
-<div id="toolSection" class="container" style="display:none;">
-    <h2>🛠 Categories</h2>
-    <div id="categoriesList"></div>
+    <div id="toolSection" class="container" style="display:none;">
+        <h2>🛠 Categories</h2>
+        <div id="categoriesList"></div>
+    </div>
 </div>
 
 <div id="modal" onclick="closeModal()">
@@ -230,6 +283,8 @@ function renderCategories(){
 
         let toolsDiv=document.createElement("div");
         toolsDiv.className="tools";
+        toolsDiv.style.maxHeight = "0px"; // initial hidden
+
         cat.tools.forEach(tool=>{
             let toolDiv=document.createElement("div");
             toolDiv.className="tool-item";
@@ -245,7 +300,14 @@ function renderCategories(){
         });
 
         catDiv.onclick=()=>{
-            toolsDiv.style.display = toolsDiv.style.display==="flex" ? "none" : "flex";
+            if(toolsDiv.style.maxHeight === "0px"){
+                toolsDiv.style.display="flex";
+                toolsDiv.style.flexDirection="column";
+                toolsDiv.style.maxHeight = toolsDiv.scrollHeight + "px";
+            }else{
+                toolsDiv.style.maxHeight = "0px";
+                setTimeout(()=>{ toolsDiv.style.display="none"; }, 400);
+            }
         };
 
         container.appendChild(catDiv);
