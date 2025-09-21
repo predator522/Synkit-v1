@@ -14,28 +14,12 @@ html, body {
     color: #fff;
     overflow-x: hidden;
 }
-.background-wrapper {
-    position: fixed;
-    top:0;
-    left:0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, #2b003d 0%, #1a1a2e 60%, #3b0a54 100%);
-    z-index: -1;
-}
 body {
     display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.container-wrapper {
-    display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
+    min-height: 100vh;
 }
 header {
     width: 100%;
@@ -49,10 +33,6 @@ header {
     border-bottom-left-radius: 40px;
     border-bottom-right-radius: 40px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    transform: scaleY(-1); /* Invert the header text */
 }
 .container {
     width: 90%;
@@ -62,7 +42,7 @@ header {
     border-radius: 50px;
     box-shadow: 0 0 25px rgba(106, 13, 173, 0.5);
     backdrop-filter: blur(10px);
-    margin-top: 100px;
+    margin-top: 40px;
 }
 input, button {
     width: 100%;
@@ -186,9 +166,6 @@ footer {
     font-size: 14px;
     color: #ccc;
     border-top: 1px solid #6a0dad;
-    position: fixed;
-    bottom: 0;
-    left: 0;
 }
 #secretZone {
     position: fixed;
@@ -202,17 +179,16 @@ footer {
 </style>
 </head>
 <body>
-<div class="background-wrapper"></div>
 <header>Synkit Tools</header>
 
-<div class="container-wrapper">
-    <div id="loginBox" class="container">
+<div class="container">
+    <div id="loginBox">
         <h2>🔑 Enter Access Code</h2>
         <input type="password" id="passwordInput" placeholder="Enter access code...">
         <button onclick="checkPassword()">🔓 Unlock</button>
     </div>
 
-    <div id="toolSection" class="container" style="display:none;">
+    <div id="toolSection" style="display:none;">
         <h2>🛠 Categories</h2>
         <div id="categoriesList"></div>
     </div>
@@ -225,7 +201,7 @@ footer {
 <div id="secretZone"></div>
 
 <footer>
-    <p>Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
+    <p style="text-align:center;">Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
 </footer>
 
 <script>
@@ -238,16 +214,15 @@ let tapCount = 0;
 let tapTimer = null;
 
 async function loadData() {
-    document.getElementById("loading").style.display = "flex";
     try {
         const res = await fetch(BIN_URL, { headers: { "X-Master-Key": API_KEY } });
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         const data = await res.json();
         binData = data.record;
         isLoading = false;
-        document.getElementById("loading").style.display = "none";
+        document.getElementById("loading")?.remove();
         document.getElementById("loginBox").style.display = "block";
-    } catch (e) {
+    } catch(e) {
         console.error("Load failed", e);
         alert("❌ Failed to load data. Refresh page.");
     }
@@ -259,8 +234,8 @@ function checkPassword() {
     if (!input) { alert("⚠️ Enter access code!"); return; }
     if (input === binData.keys.toolkit) {
         alert("✅ Access granted!");
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("toolSection").style.display = "block";
+        document.getElementById("loginBox").style.display="none";
+        document.getElementById("toolSection").style.display="block";
         renderCategories();
     } else {
         alert("❌ Invalid access code!");
@@ -270,19 +245,18 @@ function checkPassword() {
 function renderCategories() {
     const container = document.getElementById("categoriesList");
     container.innerHTML = "";
-    binData.categories.forEach((cat,index)=>{
-        const catDiv = document.createElement("div");
+    binData.categories.forEach(cat=>{
+        const catDiv=document.createElement("div");
         catDiv.className="category";
         catDiv.innerHTML=`<span class="category-name">${cat.name}</span><span>▼</span>`;
-
-        const toolsDiv = document.createElement("div");
+        const toolsDiv=document.createElement("div");
         toolsDiv.className="tools";
 
         cat.tools.forEach(tool=>{
-            const toolDiv = document.createElement("div");
+            const toolDiv=document.createElement("div");
             toolDiv.className="tool-item";
-            const btn = document.createElement("button");
-            btn.textContent = tool.name;
+            const btn=document.createElement("button");
+            btn.textContent=tool.name;
             btn.onclick=(e)=>{
                 e.stopPropagation();
                 if(tool.link) window.open(tool.link,"_blank");
@@ -292,10 +266,7 @@ function renderCategories() {
             toolsDiv.appendChild(toolDiv);
         });
 
-        catDiv.onclick = ()=>{
-            if(toolsDiv.style.display==="flex") toolsDiv.style.display="none";
-            else toolsDiv.style.display="flex";
-        };
+        catDiv.onclick=()=>{toolsDiv.style.display = toolsDiv.style.display==="flex"?"none":"flex";};
         container.appendChild(catDiv);
         container.appendChild(toolsDiv);
     });
@@ -305,17 +276,13 @@ function openModal(content) {
     document.getElementById("modalContent").innerText=content;
     document.getElementById("modal").style.display="flex";
 }
-function closeModal() {
-    document.getElementById("modal").style.display="none";
-}
+function closeModal() { document.getElementById("modal").style.display="none"; }
 
 document.getElementById("secretZone").addEventListener("click",()=>{
     tapCount++;
     clearTimeout(tapTimer);
     tapTimer=setTimeout(()=>{tapCount=0;},5000);
-    if(tapCount>=10){
-        window.location.href="admin.html";
-    }
+    if(tapCount>=10){ window.location.href="admin.html"; }
 });
 
 loadData();
