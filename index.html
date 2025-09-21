@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Synkit Tools</title>
 <style>
-    body {
-        font-family: 'Roboto', sans-serif;
-        background: linear-gradient(135deg, #2b003d, #1a1a2e, #3b0a54);
-        color: #fff;
+    body, html {
+        height: 100%;
         margin: 0;
         padding: 0;
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(to bottom, #2b003d 0%, #1a1a2e 60%, #3b0a54 100%);
+        color: #fff;
         display: flex;
-        flex-direction: column;
+        justify-content: center;
         align-items: center;
-        min-height: 100vh;
     }
     header {
         width: 100%;
@@ -28,14 +28,15 @@
         border-bottom-left-radius: 40px;
         border-bottom-right-radius: 40px;
         box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        position: absolute;
+        top: 0;
     }
     .container {
-        max-width: 700px;
         width: 90%;
+        max-width: 700px;
         background: rgba(255, 255, 255, 0.05);
         padding: 25px;
         border-radius: 50px;
-        margin: 20px 0;
         box-shadow: 0 0 25px rgba(106, 13, 173, 0.5);
         backdrop-filter: blur(10px);
     }
@@ -155,9 +156,10 @@
         font-size: 14px;
         color: #ccc;
         border-top: 1px solid #6a0dad;
+        position: absolute;
+        bottom: 0;
     }
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <header>Synkit Tools</header>
