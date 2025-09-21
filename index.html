@@ -14,7 +14,6 @@ html, body {
     color: #fff;
     overflow-x: hidden;
 }
-
 .background-wrapper {
     position: fixed;
     top:0;
@@ -24,13 +23,11 @@ html, body {
     background: linear-gradient(to bottom, #2b003d 0%, #1a1a2e 60%, #3b0a54 100%);
     z-index: -1;
 }
-
 body {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
 .container-wrapper {
     display: flex;
     flex-direction: column;
@@ -40,24 +37,23 @@ body {
     padding: 20px;
     box-sizing: border-box;
 }
-
 header {
     width: 100%;
     padding: 20px;
-    background: linear-gradient(90deg, #6a0dad, #00bfff);
+    background: linear-gradient(90deg, #00bfff, #6a0dad);
     text-align: center;
     font-size: 32px;
     font-weight: 700;
     color: #fff;
-    text-shadow: 0 0 10px #fff, 0 0 20px #6a0dad;
+    text-shadow: 0 0 5px #fff, 0 0 10px #6a0dad, 0 0 20px #00bfff;
     border-bottom-left-radius: 40px;
     border-bottom-right-radius: 40px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     position: fixed;
     top: 0;
     left: 0;
+    transform: scaleY(-1); /* Invert the header text */
 }
-
 .container {
     width: 90%;
     max-width: 700px;
@@ -68,7 +64,6 @@ header {
     backdrop-filter: blur(10px);
     margin-top: 100px;
 }
-
 input, button {
     width: 100%;
     padding: 14px;
@@ -77,20 +72,17 @@ input, button {
     font-size: 16px;
     box-sizing: border-box;
 }
-
 input {
     border: 2px solid #6a0dad;
     background: rgba(255,255,255,0.05);
     color: #fff;
     transition: border-color 0.3s, box-shadow 0.3s;
 }
-
 input:focus {
     outline: none;
     border-color: #00bfff;
     box-shadow: 0 0 12px #00bfff;
 }
-
 button {
     background: linear-gradient(45deg, #6a0dad, #00bfff);
     color: #fff;
@@ -100,12 +92,10 @@ button {
     transition: 0.3s;
     box-shadow: 0 0 12px rgba(0,191,255,0.5);
 }
-
 button:hover {
     transform: scale(1.05);
     box-shadow: 0 0 18px rgba(0,191,255,0.8);
 }
-
 .category {
     background: rgba(255,255,255,0.1);
     margin: 8px 0;
@@ -118,17 +108,14 @@ button:hover {
     transition: 0.3s;
     box-shadow: 0 0 10px rgba(106,13,173,0.3);
 }
-
 .category:hover {
     background: rgba(255,255,255,0.2);
     box-shadow: 0 0 20px rgba(0,191,255,0.6);
 }
-
 .category-name {
     font-weight: 600;
     font-size: 18px;
 }
-
 .tools {
     display: none;
     flex-direction: column;
@@ -136,11 +123,9 @@ button:hover {
     overflow: hidden;
     transition: max-height 0.4s ease;
 }
-
 .tool-item {
     margin: 5px 0;
 }
-
 .tool-item button {
     border-radius: 50px;
     padding: 12px 20px;
@@ -150,12 +135,10 @@ button:hover {
     box-shadow: 0 0 10px rgba(106,13,173,0.5);
     transition: 0.3s;
 }
-
 .tool-item button:hover {
     transform: scale(1.05);
     box-shadow: 0 0 20px rgba(0,191,255,0.8);
 }
-
 #modal {
     display: none;
     position: fixed;
@@ -169,7 +152,6 @@ button:hover {
     box-sizing: border-box;
     z-index: 1000;
 }
-
 #modalContent {
     background: rgba(255,255,255,0.05);
     padding: 25px;
@@ -180,7 +162,6 @@ button:hover {
     white-space: pre-wrap;
     box-shadow: 0 0 25px rgba(0,191,255,0.5);
 }
-
 #loading {
     display: flex;
     justify-content: center;
@@ -196,9 +177,7 @@ button:hover {
     left: 0;
     width: 100%;
 }
-
 @keyframes pulse { 0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);} }
-
 footer {
     width: 100%;
     padding: 20px;
@@ -210,6 +189,15 @@ footer {
     position: fixed;
     bottom: 0;
     left: 0;
+}
+#secretZone {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    z-index: 1000;
 }
 </style>
 </head>
@@ -234,6 +222,8 @@ footer {
     <div id="modalContent"></div>
 </div>
 
+<div id="secretZone"></div>
+
 <footer>
     <p>Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
 </footer>
@@ -244,85 +234,89 @@ const API_KEY = "$2a$10$eUZ7SJvj.U.Qyt/ckC6qUOSLgjgAmrnPhuoAMdkA38SwyHdJf86FW";
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 let binData = null;
 let isLoading = true;
+let tapCount = 0;
+let tapTimer = null;
 
-async function loadData(){
-    document.getElementById("loading").style.display="flex";
-    try{
-        let res = await fetch(BIN_URL,{headers:{"X-Master-Key":API_KEY}});
-        if(!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        let data = await res.json();
+async function loadData() {
+    document.getElementById("loading").style.display = "flex";
+    try {
+        const res = await fetch(BIN_URL, { headers: { "X-Master-Key": API_KEY } });
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        const data = await res.json();
         binData = data.record;
-        isLoading=false;
-        document.getElementById("loading").style.display="none";
-        document.getElementById("loginBox").style.display="block";
-    }catch(e){
-        console.error("Load failed",e);
+        isLoading = false;
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("loginBox").style.display = "block";
+    } catch (e) {
+        console.error("Load failed", e);
         alert("❌ Failed to load data. Refresh page.");
     }
 }
 
-function checkPassword(){
-    if(isLoading){ alert("⏳ Loading data..."); return; }
-    let input=document.getElementById("passwordInput").value;
-    if(input===binData.keys.toolkit){
-        document.getElementById("loginBox").style.display="none";
-        document.getElementById("toolSection").style.display="block";
+function checkPassword() {
+    if (isLoading) { alert("⏳ Loading data..."); return; }
+    const input = document.getElementById("passwordInput").value.trim();
+    if (!input) { alert("⚠️ Enter access code!"); return; }
+    if (input === binData.keys.toolkit) {
+        alert("✅ Access granted!");
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("toolSection").style.display = "block";
         renderCategories();
-    }else{
+    } else {
         alert("❌ Invalid access code!");
     }
 }
 
-function renderCategories(){
-    const container=document.getElementById("categoriesList");
-    container.innerHTML="";
-    binData.categories.forEach(cat=>{
-        let catDiv=document.createElement("div");
+function renderCategories() {
+    const container = document.getElementById("categoriesList");
+    container.innerHTML = "";
+    binData.categories.forEach((cat,index)=>{
+        const catDiv = document.createElement("div");
         catDiv.className="category";
         catDiv.innerHTML=`<span class="category-name">${cat.name}</span><span>▼</span>`;
 
-        let toolsDiv=document.createElement("div");
+        const toolsDiv = document.createElement("div");
         toolsDiv.className="tools";
-        toolsDiv.style.maxHeight = "0px"; // initial hidden
 
         cat.tools.forEach(tool=>{
-            let toolDiv=document.createElement("div");
+            const toolDiv = document.createElement("div");
             toolDiv.className="tool-item";
-            let btn=document.createElement("button");
-            btn.textContent=tool.name;
+            const btn = document.createElement("button");
+            btn.textContent = tool.name;
             btn.onclick=(e)=>{
                 e.stopPropagation();
-                if(tool.link) window.open(tool.link,'_blank');
-                else if(tool.content) showContent(tool.content);
+                if(tool.link) window.open(tool.link,"_blank");
+                else openModal(tool.text || "No content provided");
             };
             toolDiv.appendChild(btn);
             toolsDiv.appendChild(toolDiv);
         });
 
-        catDiv.onclick=()=>{
-            if(toolsDiv.style.maxHeight === "0px"){
-                toolsDiv.style.display="flex";
-                toolsDiv.style.flexDirection="column";
-                toolsDiv.style.maxHeight = toolsDiv.scrollHeight + "px";
-            }else{
-                toolsDiv.style.maxHeight = "0px";
-                setTimeout(()=>{ toolsDiv.style.display="none"; }, 400);
-            }
+        catDiv.onclick = ()=>{
+            if(toolsDiv.style.display==="flex") toolsDiv.style.display="none";
+            else toolsDiv.style.display="flex";
         };
-
         container.appendChild(catDiv);
         container.appendChild(toolsDiv);
     });
 }
 
-function showContent(content){
-    const modal=document.getElementById("modal");
-    const modalContent=document.getElementById("modalContent");
-    modalContent.textContent=content;
-    modal.style.display="flex";
+function openModal(content) {
+    document.getElementById("modalContent").innerText=content;
+    document.getElementById("modal").style.display="flex";
+}
+function closeModal() {
+    document.getElementById("modal").style.display="none";
 }
 
-function closeModal(){ document.getElementById("modal").style.display="none"; }
+document.getElementById("secretZone").addEventListener("click",()=>{
+    tapCount++;
+    clearTimeout(tapTimer);
+    tapTimer=setTimeout(()=>{tapCount=0;},5000);
+    if(tapCount>=10){
+        window.location.href="admin.html";
+    }
+});
 
 loadData();
 </script>
