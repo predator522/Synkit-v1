@@ -5,18 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Synkit Tools</title>
 <style>
-    body { font-family: 'Roboto', sans-serif; background:#000; color:#fff; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column; align-items:center; }
+    body { font-family: 'Roboto', sans-serif; background:#000; color:#fff; margin:0; padding:0; display:flex; flex-direction:column; align-items:center; }
     header { width:100%; padding:20px; background:rgba(0,0,0,0.9); text-align:center; font-size:32px; font-weight:700; color:#00FFFF; text-shadow:0 0 15px #00FFFF,0 0 25px #008080; }
     .container { max-width:700px; width:90%; background:rgba(255,255,255,0.1); padding:20px; border-radius:10px; margin:20px 0; }
-    input, button { width:100%; padding:10px; margin:8px 0; border-radius:5px; border:none; font-size:16px; }
-    input { border:2px solid #00FFFF; background:#111; color:#fff; }
-    input:focus { outline:none; border-color:#008080; box-shadow:0 0 8px #008080; }
-    button { background:linear-gradient(45deg,#00FFFF,#008080); color:#fff; cursor:pointer; transition:0.2s; }
-    button:hover { transform:scale(1.05); box-shadow:0 0 12px #00FFFF; }
-    .category-title { font-size:20px; font-weight:600; margin:15px 0 5px; color:#00FFFF; }
-    .tool-item { background:rgba(0,0,0,0.7); margin:5px 0; border-radius:8px; display:flex; justify-content:center; }
-    .tool-item button { width:100%; font-weight:500; font-size:16px; padding:10px; }
-    #searchBox { padding:10px; font-size:16px; border-radius:5px; margin-bottom:15px; }
+    .category { background: rgba(0, 0, 0, 0.7); margin: 5px 0; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .category:hover { background: rgba(0, 255, 255, 0.2); }
+    .category-name { font-weight:600; font-size:18px; }
+    .tools { display:none; flex-direction: column; margin-top:5px; }
+    .tool-item { background:rgba(0,0,0,0.5); margin:3px 0; border-radius:5px; }
+    .tool-item button { width:100%; font-weight:500; font-size:16px; padding:8px; border:none; border-radius:5px; background:linear-gradient(45deg,#00FFFF,#008080); color:#fff; cursor:pointer; }
+    .tool-item button:hover { transform: scale(1.05); box-shadow:0 0 10px #00FFFF; }
     #modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; color:#fff; padding:20px; box-sizing:border-box; z-index:1000; }
     #modalContent { background:#111; padding:20px; border-radius:10px; max-width:600px; max-height:80vh; overflow-y:auto; white-space:pre-wrap; }
     #loading { display:flex; justify-content:center; align-items:center; height:100vh; font-size:24px; font-weight:500; color:#fff; text-shadow:0 0 10px #00FFFF; animation:pulse 1.5s infinite; }
@@ -30,16 +28,9 @@
 
 <div id="loading">⏳ Loading...</div>
 
-<div id="loginBox" class="container" style="display:none;">
-    <h2>🔑 Enter Access Code</h2>
-    <input type="password" id="passwordInput" placeholder="Enter access code..." aria-label="Access code">
-    <button onclick="checkPassword()">🔓 Unlock</button>
-</div>
-
 <div id="toolSection" class="container" style="display:none;">
-    <h2>🛠 Available Tools</h2>
-    <input type="text" id="searchBox" placeholder="🔍 Search tools..." onkeyup="filterTools()">
-    <div id="toolsList"></div>
+    <h2>🛠 Categories</h2>
+    <div id="categoriesList"></div>
 </div>
 
 <div id="modal" onclick="closeModal()">
@@ -48,8 +39,6 @@
 
 <footer>
     <p>Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
-    <button onclick="window.open('https://wa.me/+233209033293?text=Hello%20bro','_blank')">Contact Us</button>
-    <button onclick="window.open('https://whatsapp.com/channel/0029VbB4AeoF1YlZVNDXUe2v','_blank')">Follow Our Channel</button>
 </footer>
 
 <script>
@@ -59,80 +48,55 @@ const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 let binData = null;
 let isLoading = true;
 
-async function loadData(){
+async function loadData() {
     document.getElementById("loading").style.display="flex";
     try{
         let res = await fetch(BIN_URL,{headers:{"X-Master-Key":API_KEY}});
         if(!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         let data = await res.json();
         binData = data.record;
-        console.log("✅ Data loaded", binData);
         isLoading=false;
         document.getElementById("loading").style.display="none";
-        document.getElementById("loginBox").style.display="block";
+        document.getElementById("toolSection").style.display="block";
+        renderCategories();
     }catch(e){
         console.error("Load failed",e);
         alert("❌ Failed to load data. Refresh page.");
     }
 }
 
-function checkPassword(){
-    if(isLoading){ alert("⏳ Loading data..."); return; }
-    let input=document.getElementById("passwordInput").value;
-    if(input===binData.keys.toolkit){
-        document.getElementById("loginBox").style.display="none";
-        document.getElementById("toolSection").style.display="block";
-        renderTools();
-    }else{
-        alert("❌ Invalid access code!");
-    }
-}
-
-function renderTools(){
-    const container=document.getElementById("toolsList");
+function renderCategories(){
+    const container = document.getElementById("categoriesList");
     container.innerHTML="";
-    binData.categories.forEach(cat=>{
-        let catDiv=document.createElement("div");
-        catDiv.innerHTML=`<div class="category-title">📂 ${cat.name}</div>`;
-        cat.tools.forEach(t=>{
-            let btn=document.createElement("button");
-            btn.textContent=t.name;
-            btn.onclick=()=>{
-                if(t.link) window.open(t.link,'_blank');
-                else if(t.content) showContent(t.content);
-            };
-            let toolDiv=document.createElement("div");
+    binData.categories.forEach((cat,index)=>{
+        // Category container
+        let catDiv = document.createElement("div");
+        catDiv.className="category";
+        catDiv.innerHTML=`<span class="category-name">${cat.name}</span><span>▼</span>`;
+        
+        // Tools container
+        let toolsDiv = document.createElement("div");
+        toolsDiv.className="tools";
+        cat.tools.forEach(tool=>{
+            let toolDiv = document.createElement("div");
             toolDiv.className="tool-item";
+            let btn = document.createElement("button");
+            btn.textContent = tool.name;
+            btn.onclick = ()=>{
+                if(tool.link) window.open(tool.link,'_blank');
+                else if(tool.content) showContent(tool.content);
+            };
             toolDiv.appendChild(btn);
-            catDiv.appendChild(toolDiv);
+            toolsDiv.appendChild(toolDiv);
         });
-        container.appendChild(catDiv);
-    });
-}
 
-function filterTools(){
-    const query=document.getElementById("searchBox").value.toLowerCase().trim();
-    const container=document.getElementById("toolsList");
-    container.innerHTML="";
-    binData.categories.forEach(cat=>{
-        const filtered=cat.tools.filter(t=>t.name.toLowerCase().includes(query));
-        if(filtered.length>0){
-            let catDiv=document.createElement("div");
-            catDiv.innerHTML=`<div class="category-title">📂 ${cat.name}</div>`;
-            filtered.forEach(t=>{
-                let btn=document.createElement("button");
-                btn.textContent=t.name;
-                btn.onclick=()=>{
-                    if(t.link) window.open(t.link,'_blank');
-                    else if(t.content) showContent(t.content);
-                };
-                let toolDiv=document.createElement("div");
-                toolDiv.className="tool-item";
-                toolDiv.appendChild(btn);
-                catDiv.appendChild(toolDiv);
-            });
-            container.appendChild(catDiv);
-        }
+        catDiv.onclick = ()=>{
+            const isVisible = toolsDiv.style.display==="flex";
+            toolsDiv.style.display = isVisible ? "none" : "flex";
+        };
+
+        container.appendChild(catDiv);
+        container.appendChild(toolsDiv);
     });
 }
 
