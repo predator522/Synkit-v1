@@ -1,259 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Synkit Tools</title>
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: #000000;
-            color: #FFFFFF;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-        }
-        header {
-            width: 100%;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            text-align: center;
-            font-size: 32px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #00FFFF;
-            text-shadow: 0 0 15px #00FFFF, 0 0 25px #008080;
-        }
-        .container {
-            max-width: 600px;
-            width: 90%;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-            margin: 20px 0;
-            animation: fadeIn 0.5s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        input, button {
-            padding: 12px;
-            border-radius: 5px;
-            border: none;
-            font-size: 16px;
-            background: #808080;
-            color: #FFFFFF;
-            width: 100%;
-            box-sizing: border-box;
-            margin: 10px 0;
-        }
-        input {
-            border: 2px solid #00FFFF;
-            transition: border-color 0.3s;
-        }
-        input:focus {
-            outline: none;
-            border-color: #008080;
-            box-shadow: 0 0 8px #008080;
-        }
-        button {
-            background: linear-gradient(45deg, #00FFFF, #008080);
-            color: #FFFFFF;
-            cursor: pointer;
-            font-weight: 500;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 12px #00FFFF;
-        }
-        .tool-item {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.2s;
-        }
-        .tool-item:hover {
-            transform: translateX(5px);
-        }
-        .tool-item button {
-            background: linear-gradient(45deg, #00FFFF, #008080);
-            font-weight: 600;
-            font-size: 18px;
-            padding: 10px;
-            width: 100%;
-            text-align: center;
-        }
-        .tool-item button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 10px #00FFFF;
-        }
-        #searchBox {
-            padding: 12px;
-            font-size: 16px;
-            border-radius: 5px;
-        }
-        #secretZone {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            width: 50px;
-            height: 50px;
-            background: transparent;
-            z-index: 1000;
-        }
-        #loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-size: 24px;
-            font-weight: 500;
-            color: #FFFFFF;
-            text-shadow: 0 0 10px #00FFFF;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        footer {
-            width: 100%;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            text-align: center;
-            font-size: 14px;
-            color: #808080;
-            border-top: 1px solid #00FFFF;
-        }
-        footer p {
-            margin: 5px 0;
-        }
-        footer button {
-            width: auto;
-            padding: 10px 20px;
-            margin: 5px;
-            display: inline-block;
-            background: linear-gradient(45deg, #00FFFF, #008080);
-        }
-        footer button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 12px #00FFFF;
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Synkit Tools</title>
+<style>
+    body { font-family: 'Roboto', sans-serif; background:#000; color:#fff; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column; align-items:center; }
+    header { width:100%; padding:20px; background:rgba(0,0,0,0.9); text-align:center; font-size:32px; font-weight:700; color:#00FFFF; text-shadow:0 0 15px #00FFFF,0 0 25px #008080; }
+    .container { max-width:700px; width:90%; background:rgba(255,255,255,0.1); padding:20px; border-radius:10px; margin:20px 0; }
+    input, button { width:100%; padding:10px; margin:8px 0; border-radius:5px; border:none; font-size:16px; }
+    input { border:2px solid #00FFFF; background:#111; color:#fff; }
+    input:focus { outline:none; border-color:#008080; box-shadow:0 0 8px #008080; }
+    button { background:linear-gradient(45deg,#00FFFF,#008080); color:#fff; cursor:pointer; transition:0.2s; }
+    button:hover { transform:scale(1.05); box-shadow:0 0 12px #00FFFF; }
+    .category-title { font-size:20px; font-weight:600; margin:15px 0 5px; color:#00FFFF; }
+    .tool-item { background:rgba(0,0,0,0.7); margin:5px 0; border-radius:8px; display:flex; justify-content:center; }
+    .tool-item button { width:100%; font-weight:500; font-size:16px; padding:10px; }
+    #searchBox { padding:10px; font-size:16px; border-radius:5px; margin-bottom:15px; }
+    #modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; color:#fff; padding:20px; box-sizing:border-box; z-index:1000; }
+    #modalContent { background:#111; padding:20px; border-radius:10px; max-width:600px; max-height:80vh; overflow-y:auto; white-space:pre-wrap; }
+    #loading { display:flex; justify-content:center; align-items:center; height:100vh; font-size:24px; font-weight:500; color:#fff; text-shadow:0 0 10px #00FFFF; animation:pulse 1.5s infinite; }
+    @keyframes pulse { 0%{transform:scale(1);}50%{transform:scale(1.1);}100%{transform:scale(1);} }
+    footer { width:100%; padding:20px; background:rgba(0,0,0,0.9); text-align:center; font-size:14px; color:#808080; border-top:1px solid #00FFFF; }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>Synkit Tools</header>
+<header>Synkit Tools</header>
 
-    <div id="loading">⏳ Loading...</div>
+<div id="loading">⏳ Loading...</div>
 
-    <div id="loginBox" class="container" style="display:none;">
-        <h2>🔑 Enter Access Code</h2>
-        <input type="password" id="passwordInput" placeholder="Enter access code..." aria-label="Access code">
-        <button onclick="checkPassword()">🔓 Unlock</button>
-    </div>
+<div id="loginBox" class="container" style="display:none;">
+    <h2>🔑 Enter Access Code</h2>
+    <input type="password" id="passwordInput" placeholder="Enter access code..." aria-label="Access code">
+    <button onclick="checkPassword()">🔓 Unlock</button>
+</div>
 
-    <div id="toolSection" class="container" style="display:none;">
-        <h2>🛠 Available Tools</h2>
-        <input type="text" id="searchBox" placeholder="🔍 Search tools..." onkeyup="filterTools()">
-        <div id="toolsList"></div>
-    </div>
+<div id="toolSection" class="container" style="display:none;">
+    <h2>🛠 Available Tools</h2>
+    <input type="text" id="searchBox" placeholder="🔍 Search tools..." onkeyup="filterTools()">
+    <div id="toolsList"></div>
+</div>
 
-    <div id="secretZone"></div>
+<div id="modal" onclick="closeModal()">
+    <div id="modalContent"></div>
+</div>
 
-    <footer>
-        <p>Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
-        <button onclick="window.open('https://wa.me/+233209033293?text=Hello%20bro', '_blank')">Contact Us: +233 20 903 3293</button>
-        <button onclick="window.open('https://whatsapp.com/channel/0029VbB4AeoF1YlZVNDXUe2v')">Follow Our Channel</button>
-    </footer>
+<footer>
+    <p>Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
+    <button onclick="window.open('https://wa.me/+233209033293?text=Hello%20bro','_blank')">Contact Us</button>
+    <button onclick="window.open('https://whatsapp.com/channel/0029VbB4AeoF1YlZVNDXUe2v','_blank')">Follow Our Channel</button>
+</footer>
 
-    <script>
-        const BIN_ID = "68c594c143b1c97be941e086"; // Updated BIN_ID
-        const API_KEY = "$2a$10$eUZ7SJvj.U.Qyt/ckC6qUOSLgjgAmrnPhuoAMdkA38SwyHdJf86FW"; // Updated API_KEY
-        const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-        let binData = null;
-        let tapCount = 0;
-        let tapTimer = null;
-        let isLoading = true;
+<script>
+const BIN_ID = "68c594c143b1c97be941e086";
+const API_KEY = "$2a$10$eUZ7SJvj.U.Qyt/ckC6qUOSLgjgAmrnPhuoAMdkA38SwyHdJf86FW";
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+let binData = null;
+let isLoading = true;
 
-        async function loadData() {
-            document.getElementById("loading").style.display = "flex";
-            try {
-                let res = await fetch(BIN_URL, { headers: { "X-Master-Key": API_KEY } });
-                if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-                let data = await res.json();
-                binData = data.record;
-                console.log("✅ Data loaded", binData);
-                isLoading = false;
-                document.getElementById("loading").style.display = "none";
-                document.getElementById("loginBox").style.display = "block";
-            } catch (e) {
-                console.error("Load failed", e);
-                alert("❌ Failed to load data. Please refresh.", { color: "#FF0000" });
-                document.getElementById("loading").style.display = "none";
-            }
-        }
+async function loadData(){
+    document.getElementById("loading").style.display="flex";
+    try{
+        let res = await fetch(BIN_URL,{headers:{"X-Master-Key":API_KEY}});
+        if(!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        let data = await res.json();
+        binData = data.record;
+        console.log("✅ Data loaded", binData);
+        isLoading=false;
+        document.getElementById("loading").style.display="none";
+        document.getElementById("loginBox").style.display="block";
+    }catch(e){
+        console.error("Load failed",e);
+        alert("❌ Failed to load data. Refresh page.");
+    }
+}
 
-        function checkPassword() {
-            if (isLoading) {
-                alert("⏳ Please wait, loading data...", { color: "#FFFF00" });
-                return;
-            }
-            if (!binData) {
-                alert("❌ Data not loaded. Please refresh.", { color: "#FF0000" });
-                return;
-            }
-            let input = document.getElementById("passwordInput").value;
-            if (input === binData.keys.toolkit) {
-                document.getElementById("loginBox").style.display = "none";
-                document.getElementById("toolSection").style.display = "block";
-                renderTools();
-            } else {
-                alert("❌ Invalid access code!", { color: "#FF0000" });
-            }
-        }
+function checkPassword(){
+    if(isLoading){ alert("⏳ Loading data..."); return; }
+    let input=document.getElementById("passwordInput").value;
+    if(input===binData.keys.toolkit){
+        document.getElementById("loginBox").style.display="none";
+        document.getElementById("toolSection").style.display="block";
+        renderTools();
+    }else{
+        alert("❌ Invalid access code!");
+    }
+}
 
-        function renderTools(filteredTools = binData.tools) {
-            let container = document.getElementById("toolsList");
-            container.innerHTML = "";
-            filteredTools.forEach(t => {
-                container.innerHTML += `
-                    <div class="tool-item">
-                        <button onclick="window.open('${t.link}', '_blank')">${t.name}</button>
-                    </div>
-                `;
-            });
-        }
-
-        function filterTools() {
-            let search = document.getElementById("searchBox").value.toLowerCase().trim();
-            let filtered = binData.tools.filter(t => t.name.toLowerCase().includes(search));
-            renderTools(filtered);
-        }
-
-        document.getElementById("secretZone").addEventListener("click", () => {
-            tapCount++;
-            clearTimeout(tapTimer);
-            tapTimer = setTimeout(() => { tapCount = 0; }, 5000);
-            if (tapCount >= 10) {
-                window.location.href = "admin.html";
-            }
+function renderTools(){
+    const container=document.getElementById("toolsList");
+    container.innerHTML="";
+    binData.categories.forEach(cat=>{
+        let catDiv=document.createElement("div");
+        catDiv.innerHTML=`<div class="category-title">📂 ${cat.name}</div>`;
+        cat.tools.forEach(t=>{
+            let btn=document.createElement("button");
+            btn.textContent=t.name;
+            btn.onclick=()=>{
+                if(t.link) window.open(t.link,'_blank');
+                else if(t.content) showContent(t.content);
+            };
+            let toolDiv=document.createElement("div");
+            toolDiv.className="tool-item";
+            toolDiv.appendChild(btn);
+            catDiv.appendChild(toolDiv);
         });
+        container.appendChild(catDiv);
+    });
+}
 
-        loadData();
-    </script>
+function filterTools(){
+    const query=document.getElementById("searchBox").value.toLowerCase().trim();
+    const container=document.getElementById("toolsList");
+    container.innerHTML="";
+    binData.categories.forEach(cat=>{
+        const filtered=cat.tools.filter(t=>t.name.toLowerCase().includes(query));
+        if(filtered.length>0){
+            let catDiv=document.createElement("div");
+            catDiv.innerHTML=`<div class="category-title">📂 ${cat.name}</div>`;
+            filtered.forEach(t=>{
+                let btn=document.createElement("button");
+                btn.textContent=t.name;
+                btn.onclick=()=>{
+                    if(t.link) window.open(t.link,'_blank');
+                    else if(t.content) showContent(t.content);
+                };
+                let toolDiv=document.createElement("div");
+                toolDiv.className="tool-item";
+                toolDiv.appendChild(btn);
+                catDiv.appendChild(toolDiv);
+            });
+            container.appendChild(catDiv);
+        }
+    });
+}
+
+function showContent(content){
+    const modal=document.getElementById("modal");
+    const modalContent=document.getElementById("modalContent");
+    modalContent.textContent=content;
+    modal.style.display="flex";
+}
+
+function closeModal(){ document.getElementById("modal").style.display="none"; }
+
+loadData();
+</script>
 </body>
 </html>
