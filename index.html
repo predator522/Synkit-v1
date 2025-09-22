@@ -5,207 +5,268 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Synkit Tools</title>
 <style>
+/* --- Base / layout --- */
 html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(to bottom, #2b003d 0%, #1a1a2e 60%, #3b0a54 100%);
-    color: #fff;
-    overflow-x: hidden;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(to bottom, #2b003d 0%, #1a1a2e 60%, #3b0a54 100%);
+  color: #fff;
+  overflow-x: hidden;
 }
 body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 100vh;
 }
+
+/* --- Header --- */
 header {
-    width: 100%;
-    padding: 20px;
-    background: linear-gradient(90deg, #00bfff, #6a0dad);
-    text-align: center;
-    font-size: 32px;
-    font-weight: 700;
-    color: #fff;
-    text-shadow: 0 0 5px #fff, 0 0 10px #6a0dad, 0 0 20px #00bfff;
-    border-bottom-left-radius: 40px;
-    border-bottom-right-radius: 40px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(90deg, #00bfff, #6a0dad);
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0 5px #fff, 0 0 10px #6a0dad, 0 0 20px #00bfff;
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
+
+/* --- Main container --- */
 .container {
-    width: 90%;
-    max-width: 700px;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 25px;
-    border-radius: 50px;
-    box-shadow: 0 0 25px rgba(106, 13, 173, 0.5);
-    backdrop-filter: blur(10px);
-    margin-top: 40px;
+  width: 90%;
+  max-width: 700px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 25px;
+  border-radius: 50px;
+  box-shadow: 0 0 25px rgba(106, 13, 173, 0.5);
+  backdrop-filter: blur(10px);
+  margin-top: 40px;
 }
+
+/* --- Inputs & buttons --- */
 input, button {
-    width: 100%;
-    padding: 14px;
-    margin: 10px 0;
-    border-radius: 50px;
-    font-size: 16px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  border-radius: 50px;
+  font-size: 16px;
+  box-sizing: border-box;
 }
 input {
-    border: 2px solid #6a0dad;
-    background: rgba(255,255,255,0.05);
-    color: #fff;
-    transition: border-color 0.3s, box-shadow 0.3s;
+  border: 2px solid #6a0dad;
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 input:focus {
-    outline: none;
-    border-color: #00bfff;
-    box-shadow: 0 0 12px #00bfff;
+  outline: none;
+  border-color: #00bfff;
+  box-shadow: 0 0 12px #00bfff;
 }
 button {
-    background: linear-gradient(45deg, #6a0dad, #00bfff);
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-    transition: 0.3s;
-    box-shadow: 0 0 12px rgba(0,191,255,0.5);
+  background: linear-gradient(45deg, #6a0dad, #00bfff);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+  box-shadow: 0 0 12px rgba(0,191,255,0.5);
 }
 button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 18px rgba(0,191,255,0.8);
+  transform: scale(1.05);
+  box-shadow: 0 0 18px rgba(0,191,255,0.8);
 }
+
+/* --- Categories / tools --- */
 .category {
-    background: rgba(255,255,255,0.1);
-    margin: 8px 0;
-    padding: 14px 20px;
-    border-radius: 50px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: 0.3s;
-    box-shadow: 0 0 10px rgba(106,13,173,0.3);
+  background: rgba(255,255,255,0.1);
+  margin: 8px 0;
+  padding: 14px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.3s;
+  box-shadow: 0 0 10px rgba(106,13,173,0.3);
 }
 .category:hover {
-    background: rgba(255,255,255,0.2);
-    box-shadow: 0 0 20px rgba(0,191,255,0.6);
+  background: rgba(255,255,255,0.2);
+  box-shadow: 0 0 20px rgba(0,191,255,0.6);
 }
 .category-name {
-    font-weight: 600;
-    font-size: 18px;
+  font-weight: 600;
+  font-size: 18px;
 }
 .tools {
-    display: none;
-    flex-direction: column;
-    margin-top: 8px;
-    overflow: hidden;
+  display: none;
+  flex-direction: column;
+  margin-top: 8px;
+  overflow: hidden;
 }
 .tool-item {
-    margin: 5px 0;
+  margin: 5px 0;
 }
 .tool-item button {
-    border-radius: 50px;
-    padding: 12px 20px;
-    font-weight: 500;
-    font-size: 16px;
-    background: linear-gradient(45deg, #00bfff, #6a0dad);
-    box-shadow: 0 0 10px rgba(106,13,173,0.5);
-    transition: 0.3s;
+  border-radius: 50px;
+  padding: 12px 20px;
+  font-weight: 500;
+  font-size: 16px;
+  background: linear-gradient(45deg, #00bfff, #6a0dad);
+  box-shadow: 0 0 10px rgba(106,13,173,0.5);
+  transition: 0.3s;
 }
 .tool-item button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(0,191,255,0.8);
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0,191,255,0.8);
 }
+
+/* --- Modal --- */
 #modal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95);
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    padding: 20px;
-    box-sizing: border-box;
-    z-index: 1000;
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.95);
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 1000;
 }
-#modalContent {
-    background: rgba(255,255,255,0.05);
-    padding: 25px;
-    border-radius: 50px;
-    max-width: 600px;
-    max-height: 80vh;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    box-shadow: 0 0 25px rgba(0,191,255,0.5);
+#modalInner {
+  position: relative; /* for copy icon */
+  background: rgba(255,255,255,0.05);
+  padding: 25px 30px;
+  padding-top: 36px;
+  border-radius: 20px;
+  max-width: 760px;
+  width: calc(100% - 40px);
+  max-height: 80vh;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  box-shadow: 0 0 25px rgba(0,191,255,0.5);
 }
+
+/* small clipboard icon (no label) */
+#copyBtn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  color: #cfd8dc;
+  padding: 6px;
+  border-radius: 8px;
+  transition: 0.18s;
+  user-select: none;
+}
+#copyBtn:hover {
+  color: #00bfff;
+  text-shadow: 0 0 8px #00bfff;
+  transform: translateY(-2px);
+}
+#copyBtn:active {
+  transform: translateY(0);
+}
+
+/* toast (small ephemeral message) */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  display: none;
+  z-index: 2000;
+  font-size: 14px;
+}
+
+/* Loading full-screen fallback (removed after load) */
 #loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    font-size: 24px;
-    font-weight: 500;
-    color: #fff;
-    text-shadow: 0 0 10px #6a0dad;
-    animation: pulse 1.5s infinite;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  font-size:20px;
+  font-weight:500;
+  color:#fff;
+  position: absolute;
+  top:0; left:0;
+  width:100%;
+  background: transparent;
+  z-index: 500;
 }
-@keyframes pulse { 
-    0%{transform:scale(1);} 
-    50%{transform:scale(1.05);} 
-    100%{transform:scale(1);} 
-}
+
+/* Footer */
 footer {
-    width: 100%;
-    padding: 20px;
-    background: rgba(0,0,0,0.9);
-    text-align: center;
-    font-size: 14px;
-    color: #ccc;
-    border-top: 1px solid #6a0dad;
+  width: 100%;
+  padding: 20px;
+  background: rgba(0,0,0,0.9);
+  text-align: center;
+  font-size: 14px;
+  color: #ccc;
+  border-top: 1px solid #6a0dad;
 }
+
+/* secret zone hit area */
 #secretZone {
-    position: fixed;
-    bottom: 10px;
-    left: 10px;
-    width: 50px;
-    height: 50px;
-    background: transparent;
-    z-index: 1000;
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  width: 50px;
+  height: 50px;
+  background: transparent;
+  z-index: 1000;
 }
 </style>
 </head>
 <body>
 <header>Synkit Tools</header>
 
+<!-- Loading indicator (removed when bin loads) -->
+<div id="loading">⏳ Loading...</div>
+
 <div class="container">
-    <div id="loginBox">
-        <h2>🔑 Enter Access Code</h2>
-        <input type="password" id="passwordInput" placeholder="Enter access code...">
-        <button id="unlockBtn">🔓 Unlock</button>
-    </div>
+  <div id="loginBox" style="display:none;">
+    <h2>🔑 Enter Access Code</h2>
+    <input id="passwordInput" type="password" placeholder="Enter access code...">
+    <button id="unlockBtn">🔓 Unlock</button>
+  </div>
 
-    <div id="toolSection" style="display:none;">
-        <h2>🛠 Categories</h2>
-        <div id="categoriesList"></div>
-    </div>
+  <div id="toolSection" style="display:none;">
+    <h2>🛠 Categories</h2>
+    <div id="categoriesList"></div>
+  </div>
 </div>
 
-<!-- Modal (clicking outside content closes modal) -->
+<!-- Modal: click outside closes -->
 <div id="modal" onclick="closeModal()">
-    <div id="modalContent" onclick="event.stopPropagation()"></div>
+  <div id="modalInner" onclick="event.stopPropagation()">
+    <span id="copyBtn" title="Copy to clipboard" onclick="copyModalText()">📋</span>
+    <div id="modalContent" aria-live="polite"></div>
+  </div>
 </div>
+
+<div id="toast" role="status" aria-live="polite"></div>
 
 <div id="secretZone"></div>
 
 <footer>
-    <p style="text-align:center;">Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
+  <p style="margin:0;">Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
 </footer>
 
 <script>
@@ -220,14 +281,23 @@ let isLoading = true;
 let tapCount = 0;
 let tapTimer = null;
 
-/* -------------- HELPERS -------------- */
+/* -------------- UTILITIES -------------- */
 function safeHasLink(tool){
-  // treat empty string as no link
   return !!(tool.link && String(tool.link).trim() !== "");
 }
 function getToolContent(tool){
-  // support multiple possible fields: text, content
   return (tool.text ?? tool.content ?? tool.body ?? "").toString();
+}
+function showToast(msg, ms = 1500){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  t.style.opacity = '1';
+  setTimeout(()=> {
+    t.style.transition = 'opacity 300ms';
+    t.style.opacity = '0';
+    setTimeout(()=> t.style.display = 'none', 300);
+  }, ms);
 }
 
 /* -------------- LOAD BIN -------------- */
@@ -238,9 +308,8 @@ async function loadData(){
     const data = await res.json();
     binData = data.record;
     isLoading = false;
-    // hide loading if present and show login
-    const loading = document.getElementById('loading');
-    if(loading) loading.remove();
+    const loadingElem = document.getElementById('loading');
+    if(loadingElem) loadingElem.remove();
     document.getElementById('loginBox').style.display = 'block';
   }catch(err){
     console.error('Failed to load bin:', err);
@@ -248,12 +317,12 @@ async function loadData(){
   }
 }
 
-/* -------------- PASSWORD / UI -------------- */
+/* -------------- PASSWORD UI -------------- */
 document.getElementById('unlockBtn').addEventListener('click', checkPassword);
 
 function checkPassword(){
   if(isLoading){
-    alert('⏳ Loading data, please wait...');
+    showToast('⏳ Loading data...');
     return;
   }
   if(!binData){
@@ -261,50 +330,48 @@ function checkPassword(){
     return;
   }
   const input = document.getElementById('passwordInput').value?.trim();
-  if(!input){ alert('⚠️ Enter access code!'); return; }
-
+  if(!input){ showToast('⚠️ Enter access code!'); return; }
   if(input === binData.keys?.toolkit){
-    // correct
     document.getElementById('loginBox').style.display = 'none';
     document.getElementById('toolSection').style.display = 'block';
     renderCategories();
   } else {
-    alert('❌ Invalid access code!');
+    showToast('❌ Invalid access code!');
   }
 }
 
-/* -------------- RENDERING -------------- */
+/* -------------- RENDER CATEGORIES & TOOLS -------------- */
 function renderCategories(){
   const container = document.getElementById('categoriesList');
   container.innerHTML = '';
 
-  // if old flat format exists (binData.tools), convert to single category
+  // Support old flat structure: if binData.tools exists and categories missing, convert
   if(binData.tools && Array.isArray(binData.tools) && (!binData.categories || !Array.isArray(binData.categories))){
     binData.categories = [{ name: 'General', tools: binData.tools }];
   }
 
   const cats = Array.isArray(binData.categories) ? binData.categories : [];
-  cats.forEach((cat)=>{
+  cats.forEach((cat) => {
     const catDiv = document.createElement('div');
     catDiv.className = 'category';
-    catDiv.innerHTML = `<span class="category-name">${escapeHtml(cat.name || 'Category')}</span><span>▼</span>`;
+    catDiv.innerHTML = `<span class="category-name">${escapeHtml(cat.name ?? 'Category')}</span><span>▼</span>`;
 
     const toolsDiv = document.createElement('div');
     toolsDiv.className = 'tools';
 
-    (Array.isArray(cat.tools) ? cat.tools : []).forEach((tool)=>{
+    (Array.isArray(cat.tools) ? cat.tools : []).forEach((tool) => {
       const toolDiv = document.createElement('div');
       toolDiv.className = 'tool-item';
       const btn = document.createElement('button');
-      btn.textContent = tool.name || 'Untitled';
+      btn.textContent = tool.name ?? 'Untitled';
+
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-
         const hasLink = safeHasLink(tool);
         const content = getToolContent(tool).trim();
 
         if(hasLink && content){
-          // both exist: ask the user
+          // both exist
           const openInstructions = confirm('This item has both a link and instructions.\n\nPress OK to view instructions, Cancel to open the link.');
           if(openInstructions){
             openModal(content);
@@ -324,13 +391,10 @@ function renderCategories(){
       toolsDiv.appendChild(toolDiv);
     });
 
-    // clicking the category toggles tools
     catDiv.addEventListener('click', () => {
       const isShown = getComputedStyle(toolsDiv).display !== 'none';
       toolsDiv.style.display = isShown ? 'none' : 'flex';
-      if(!isShown){
-        toolsDiv.style.flexDirection = 'column';
-      }
+      if(!isShown) toolsDiv.style.flexDirection = 'column';
     });
 
     container.appendChild(catDiv);
@@ -338,16 +402,31 @@ function renderCategories(){
   });
 }
 
-/* -------------- MODAL -------------- */
+/* -------------- MODAL & COPY -------------- */
 function openModal(content){
   const modal = document.getElementById('modal');
   const modalContent = document.getElementById('modalContent');
-  // use innerHTML but escape newlines preserved; content is from your bin so be cautious if you store HTML.
   modalContent.innerText = content;
   modal.style.display = 'flex';
+  // scroll top
+  modalContent.scrollTop = 0;
 }
 function closeModal(){
   document.getElementById('modal').style.display = 'none';
+}
+async function copyModalText(){
+  try{
+    const text = document.getElementById('modalContent').innerText;
+    if(!text || !text.trim()){
+      showToast('⚠️ Nothing to copy');
+      return;
+    }
+    await navigator.clipboard.writeText(text);
+    showToast('✅ Copied');
+  }catch(err){
+    console.error('Copy failed', err);
+    showToast('❌ Copy failed');
+  }
 }
 
 /* -------------- SECRET TAP ZONE -------------- */
@@ -360,12 +439,23 @@ document.getElementById('secretZone').addEventListener('click', ()=>{
   }
 });
 
-/* -------------- UTILS -------------- */
+/* -------------- SAFETY / UTIL -------------- */
 function escapeHtml(text){
-  return String(text).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; });
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
-/* -------------- START -------------- */
+/* Attach copy handler to visible icon */
+document.getElementById('copyBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  copyModalText();
+});
+
+/* Start */
 loadData();
 </script>
 </body>
