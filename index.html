@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Synkit Tools</title>
 <style>
 html, body {
@@ -101,7 +101,6 @@ button:hover {
     flex-direction: column;
     margin-top: 8px;
     overflow: hidden;
-    transition: max-height 0.4s ease;
 }
 .tool-item {
     margin: 5px 0;
@@ -189,7 +188,7 @@ footer {
     <div id="loginBox">
         <h2>🔑 Enter Access Code</h2>
         <input type="password" id="passwordInput" placeholder="Enter access code...">
-        <button onclick="checkPassword()">🔓 Unlock</button>
+        <button id="unlockBtn">🔓 Unlock</button>
     </div>
 
     <div id="toolSection" style="display:none;">
@@ -198,108 +197,175 @@ footer {
     </div>
 </div>
 
+<!-- Modal (clicking outside content closes modal) -->
 <div id="modal" onclick="closeModal()">
-    <div id="modalContent"></div>
+    <div id="modalContent" onclick="event.stopPropagation()"></div>
 </div>
 
 <div id="secretZone"></div>
 
 <footer>
-    <p>Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
+    <p style="text-align:center;">Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
 </footer>
 
 <script>
+/* -------------- CONFIG -------------- */
 const BIN_ID = "68c594c143b1c97be941e086";
 const API_KEY = "$2a$10$eUZ7SJvj.U.Qyt/ckC6qUOSLgjgAmrnPhuoAMdkA38SwyHdJf86FW";
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+/* -------------- STATE -------------- */
 let binData = null;
 let isLoading = true;
 let tapCount = 0;
 let tapTimer = null;
 
-async function loadData() {
-    try {
-        const res = await fetch(BIN_URL, { headers: { "X-Master-Key": API_KEY } });
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        const data = await res.json();
-        binData = data.record;
-        isLoading = false;
-        document.getElementById("loading")?.remove();
-        document.getElementById("loginBox").style.display = "block";
-    } catch(e) {
-        console.error("Load failed", e);
-        alert("❌ Failed to load data. Refresh page.");
-    }
+/* -------------- HELPERS -------------- */
+function safeHasLink(tool){
+  // treat empty string as no link
+  return !!(tool.link && String(tool.link).trim() !== "");
+}
+function getToolContent(tool){
+  // support multiple possible fields: text, content
+  return (tool.text ?? tool.content ?? tool.body ?? "").toString();
 }
 
-function checkPassword() {
-    if (isLoading) { alert("⏳ Loading data..."); return; }
-    const input = document.getElementById("passwordInput").value.trim();
-    if (!input) { alert("⚠️ Enter access code!"); return; }
-    if (input === binData.keys.toolkit) {
-        alert("✅ Access granted!");
-        document.getElementById("loginBox").style.display="none";
-        document.getElementById("toolSection").style.display="block";
-        renderCategories();
-    } else {
-        alert("❌ Invalid access code!");
-    }
+/* -------------- LOAD BIN -------------- */
+async function loadData(){
+  try{
+    const res = await fetch(BIN_URL, { headers: { "X-Master-Key": API_KEY }});
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    binData = data.record;
+    isLoading = false;
+    // hide loading if present and show login
+    const loading = document.getElementById('loading');
+    if(loading) loading.remove();
+    document.getElementById('loginBox').style.display = 'block';
+  }catch(err){
+    console.error('Failed to load bin:', err);
+    alert('❌ Failed to load data. Please refresh the page.');
+  }
 }
 
-function renderCategories() {
-    const container = document.getElementById("categoriesList");
-    container.innerHTML = "";
-    binData.categories.forEach(cat=>{
-        const catDiv=document.createElement("div");
-        catDiv.className="category";
-        catDiv.innerHTML=`<span class="category-name">${cat.name}</span><span>▼</span>`;
-        const toolsDiv=document.createElement("div");
-        toolsDiv.className="tools";
+/* -------------- PASSWORD / UI -------------- */
+document.getElementById('unlockBtn').addEventListener('click', checkPassword);
 
-        cat.tools.forEach(tool=>{
-            const toolDiv=document.createElement("div");
-            toolDiv.className="tool-item";
-            const btn=document.createElement("button");
-            btn.textContent=tool.name;
-            btn.onclick=(e)=>{
-                e.stopPropagation();
-                if (tool.link && tool.text) {
-                    if (confirm("📘 Do you want to view the instructions instead of opening the link?")) {
-                        openModal(tool.text);
-                    } else {
-                        window.open(tool.link, "_blank");
-                    }
-                } else if (tool.link) {
-                    window.open(tool.link,"_blank");
-                } else if (tool.text) {
-                    openModal(tool.text);
-                } else {
-                    openModal("⚠️ No content available");
-                }
-            };
-            toolDiv.appendChild(btn);
-            toolsDiv.appendChild(toolDiv);
-        });
+function checkPassword(){
+  if(isLoading){
+    alert('⏳ Loading data, please wait...');
+    return;
+  }
+  if(!binData){
+    alert('❌ Data not available. Refresh page.');
+    return;
+  }
+  const input = document.getElementById('passwordInput').value?.trim();
+  if(!input){ alert('⚠️ Enter access code!'); return; }
 
-        catDiv.onclick=()=>{toolsDiv.style.display = toolsDiv.style.display==="flex"?"none":"flex";};
-        container.appendChild(catDiv);
-        container.appendChild(toolsDiv);
+  if(input === binData.keys?.toolkit){
+    // correct
+    document.getElementById('loginBox').style.display = 'none';
+    document.getElementById('toolSection').style.display = 'block';
+    renderCategories();
+  } else {
+    alert('❌ Invalid access code!');
+  }
+}
+
+/* -------------- RENDERING -------------- */
+function renderCategories(){
+  const container = document.getElementById('categoriesList');
+  container.innerHTML = '';
+
+  // if old flat format exists (binData.tools), convert to single category
+  if(binData.tools && Array.isArray(binData.tools) && (!binData.categories || !Array.isArray(binData.categories))){
+    binData.categories = [{ name: 'General', tools: binData.tools }];
+  }
+
+  const cats = Array.isArray(binData.categories) ? binData.categories : [];
+  cats.forEach((cat)=>{
+    const catDiv = document.createElement('div');
+    catDiv.className = 'category';
+    catDiv.innerHTML = `<span class="category-name">${escapeHtml(cat.name || 'Category')}</span><span>▼</span>`;
+
+    const toolsDiv = document.createElement('div');
+    toolsDiv.className = 'tools';
+
+    (Array.isArray(cat.tools) ? cat.tools : []).forEach((tool)=>{
+      const toolDiv = document.createElement('div');
+      toolDiv.className = 'tool-item';
+      const btn = document.createElement('button');
+      btn.textContent = tool.name || 'Untitled';
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+
+        const hasLink = safeHasLink(tool);
+        const content = getToolContent(tool).trim();
+
+        if(hasLink && content){
+          // both exist: ask the user
+          const openInstructions = confirm('This item has both a link and instructions.\n\nPress OK to view instructions, Cancel to open the link.');
+          if(openInstructions){
+            openModal(content);
+          } else {
+            window.open(tool.link, '_blank');
+          }
+        } else if(hasLink){
+          window.open(tool.link, '_blank');
+        } else if(content){
+          openModal(content);
+        } else {
+          openModal('⚠️ No content available for this tool.');
+        }
+      });
+
+      toolDiv.appendChild(btn);
+      toolsDiv.appendChild(toolDiv);
     });
+
+    // clicking the category toggles tools
+    catDiv.addEventListener('click', () => {
+      const isShown = getComputedStyle(toolsDiv).display !== 'none';
+      toolsDiv.style.display = isShown ? 'none' : 'flex';
+      if(!isShown){
+        toolsDiv.style.flexDirection = 'column';
+      }
+    });
+
+    container.appendChild(catDiv);
+    container.appendChild(toolsDiv);
+  });
 }
 
-function openModal(content) {
-    document.getElementById("modalContent").innerText=content;
-    document.getElementById("modal").style.display="flex";
+/* -------------- MODAL -------------- */
+function openModal(content){
+  const modal = document.getElementById('modal');
+  const modalContent = document.getElementById('modalContent');
+  // use innerHTML but escape newlines preserved; content is from your bin so be cautious if you store HTML.
+  modalContent.innerText = content;
+  modal.style.display = 'flex';
 }
-function closeModal() { document.getElementById("modal").style.display="none"; }
+function closeModal(){
+  document.getElementById('modal').style.display = 'none';
+}
 
-document.getElementById("secretZone").addEventListener("click",()=>{
-    tapCount++;
-    clearTimeout(tapTimer);
-    tapTimer=setTimeout(()=>{tapCount=0;},5000);
-    if(tapCount>=10){ window.location.href="admin.html"; }
+/* -------------- SECRET TAP ZONE -------------- */
+document.getElementById('secretZone').addEventListener('click', ()=>{
+  tapCount++;
+  clearTimeout(tapTimer);
+  tapTimer = setTimeout(()=> { tapCount = 0; }, 5000);
+  if(tapCount >= 10){
+    window.location.href = 'admin.html';
+  }
 });
 
+/* -------------- UTILS -------------- */
+function escapeHtml(text){
+  return String(text).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; });
+}
+
+/* -------------- START -------------- */
 loadData();
 </script>
 </body>
