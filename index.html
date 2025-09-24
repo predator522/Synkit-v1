@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Synkit Tools</title>
 <style>
-
+/* --- Base / layout --- */
 html, body {
   height: 100%;
   margin: 0;
@@ -23,7 +23,7 @@ body {
   min-height: 100vh;
 }
 
-
+/* --- Header --- */
 header {
   width: 100%;
   padding: 20px;
@@ -38,7 +38,7 @@ header {
   box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
-
+/* --- Main container --- */
 .container {
   width: 90%;
   max-width: 700px;
@@ -50,7 +50,7 @@ header {
   margin-top: 40px;
 }
 
-
+/* --- Inputs & buttons --- */
 input, button {
   width: 100%;
   padding: 14px;
@@ -84,7 +84,7 @@ button:hover {
   box-shadow: 0 0 18px rgba(0,191,255,0.8);
 }
 
-
+/* --- Categories / tools --- */
 .category {
   background: rgba(255,255,255,0.1);
   margin: 8px 0;
@@ -128,7 +128,7 @@ button:hover {
   box-shadow: 0 0 20px rgba(0,191,255,0.8);
 }
 
-
+/* --- Modal --- */
 #modal {
   display: none;
   position: fixed;
@@ -156,7 +156,7 @@ button:hover {
   box-shadow: 0 0 25px rgba(0,191,255,0.5);
 }
 
-
+/* small clipboard icon */
 #copyBtn {
   position: absolute;
   top: 8px;
@@ -179,7 +179,7 @@ button:hover {
   transform: translateY(0);
 }
 
-
+/* toast */
 #toast {
   position: fixed;
   bottom: 24px;
@@ -195,7 +195,7 @@ button:hover {
   font-size: 14px;
 }
 
-
+/* Loading */
 #loading {
   display:flex;
   justify-content:center;
@@ -211,7 +211,7 @@ button:hover {
   z-index: 500;
 }
 
-
+/* Footer */
 footer {
   width: 100%;
   padding: 20px;
@@ -222,7 +222,7 @@ footer {
   border-top: 1px solid #6a0dad;
 }
 
-
+/* secret zone */
 #secretZone {
   position: fixed;
   bottom: 10px;
@@ -240,28 +240,28 @@ footer {
 <div id="loading">⏳ Loading...</div>
 
 <div class="container">
-  
+  <!-- Password -->
   <div id="loginBox" style="display:none;">
     <h2>🔑 Enter Access Code</h2>
     <input id="passwordInput" type="password" placeholder="Enter access code...">
     <button id="unlockBtn">🔓 Unlock</button>
   </div>
 
-  <
+  <!-- Join flow -->
   <div id="preExplore" style="display:none; text-align:center; margin-top:20px;">
     <button id="joinGroupBtn">Join WhatsApp Group</button>
     <button id="joinChannelBtn" style="display:none;">Join WhatsApp Channel</button>
     <button id="exploreBtn" style="display:none;">Explore Tools</button>
   </div>
 
-  
+  <!-- Tools -->
   <div id="toolSection" style="display:none;">
     <h2>🛠 Categories</h2>
     <div id="categoriesList"></div>
   </div>
 </div>
 
-
+<!-- Modal -->
 <div id="modal" onclick="closeModal()">
   <div id="modalInner" onclick="event.stopPropagation()">
     <span id="copyBtn" title="Copy to clipboard" onclick="copyModalText()">📋</span>
@@ -277,16 +277,16 @@ footer {
 </footer>
 
 <script>
-
+/* ----------------- CONFIG ----------------- */
 const BIN_ID = "68d3ae8ed0ea881f4088e97d";
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-  
+/* ----------------- STATE ----------------- */
 let binData = null;
 let tapCount = 0;
 let tapTimer = null;
 
-
+/* ----------------- UTIL ----------------- */
 function showToast(msg, ms = 1500){
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -321,7 +321,7 @@ async function copyModalText(){
   }catch(err){ showToast('❌ Copy failed'); console.error(err); }
 }
 
-
+/* ----------------- LOAD DATA ----------------- */
 async function loadData(){
   try{
     const res = await fetch(BIN_URL);
@@ -335,7 +335,7 @@ async function loadData(){
   }
 }
 
-
+/* ----------------- PASSWORD UNLOCK ----------------- */
 document.getElementById('unlockBtn').addEventListener('click', async ()=>{
   const pwd = document.getElementById('passwordInput').value.trim();
   if(!pwd){ showToast('⚠️ Enter access code'); return; }
@@ -354,7 +354,7 @@ document.getElementById('unlockBtn').addEventListener('click', async ()=>{
   }catch(err){ console.error(err); showToast('❌ Server error'); }
 });
 
-
+/* ----------------- JOIN FLOW ----------------- */
 const joinGroupBtn = document.getElementById('joinGroupBtn');
 const joinChannelBtn = document.getElementById('joinChannelBtn');
 const exploreBtn = document.getElementById('exploreBtn');
@@ -371,7 +371,7 @@ joinChannelBtn.addEventListener('click', ()=>{
 
 exploreBtn.addEventListener('click', ()=>{ document.getElementById('toolSection').style.display='block'; });
 
-
+/* ----------------- RENDER TOOLS ----------------- */
 function safeHasLink(tool){ return !!(tool.link && String(tool.link).trim() !== ""); }
 function getToolContent(tool){ return (tool.text ?? tool.content ?? tool.body ?? "").toString(); }
 
@@ -408,14 +408,16 @@ function renderCategories(){
 
     container.appendChild(catDiv); container.appendChild(toolsDiv);
   });
+}
 
+/* ----------------- SECRET TAP ----------------- */
 document.getElementById('secretZone').addEventListener('click', ()=>{
   tapCount++; clearTimeout(tapTimer);
   tapTimer=setTimeout(()=>{tapCount=0;},5000);
   if(tapCount>=10){ window.location.href='admin.html'; }
 });
 
-
+/* ----------------- INIT ----------------- */
 loadData();
 </script>
 </body>
