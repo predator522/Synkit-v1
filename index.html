@@ -38,35 +38,25 @@ footer {width:100%; padding:20px; background:rgba(0,0,0,0.9); text-align:center;
 <div id="loading">⏳ Loading...</div>
 
 <div class="container">
-  <!-- Onboarding -->
   <div id="onboarding">
     <h2>⚡ Welcome to Synkit Tools</h2>
-    <div class="step" id="step1">
-      <button onclick="completeStep(1,'https://chat.whatsapp.com/Lr2Tzrf19kaJgWg5ODKzq6?mode=ems_copy_t')">Join Group</button>
-    </div>
-    <div class="step" id="step2" style="display:none;">
-      <button onclick="completeStep(2,'https://whatsapp.com/channel/0029VbB4AeoF1YlZVNDXUe2v')">Join Channel</button>
-    </div>
-    <div class="step" id="step3" style="display:none;">
-      <button onclick="startApp()">🚀 Explore Tools</button>
-    </div>
+    <div class="step" id="step1"><button onclick="completeStep(1,'https://chat.whatsapp.com/Lr2Tzrf19kaJgWg5ODKzq6?mode=ems_copy_t')">Join Group</button></div>
+    <div class="step" id="step2" style="display:none;"><button onclick="completeStep(2,'https://whatsapp.com/channel/0029VbB4AeoF1YlZVNDXUe2v')">Join Channel</button></div>
+    <div class="step" id="step3" style="display:none;"><button onclick="startApp()">🚀 Explore Tools</button></div>
   </div>
 
-  <!-- Login -->
   <div id="loginBox" style="display:none;">
     <h2>🔑 Enter Access Code</h2>
     <input id="passwordInput" type="password" placeholder="Enter access code...">
     <button id="unlockBtn">🔓 Unlock</button>
   </div>
 
-  <!-- Tools -->
   <div id="toolSection" style="display:none;">
     <h2>🛠 Categories</h2>
     <div id="categoriesList"></div>
   </div>
 </div>
 
-<!-- Modal -->
 <div id="modal" onclick="closeModal()">
   <div id="modalInner" onclick="event.stopPropagation()">
     <span id="copyBtn" onclick="copyModalText()">📋</span>
@@ -84,21 +74,31 @@ footer {width:100%; padding:20px; background:rgba(0,0,0,0.9); text-align:center;
 const BIN_ID="68d3ae8ed0ea881f4088e97d";
 const API_KEY="$2a$10$WU9EPi5LbC9ImvrT7UMbUe/5OEEKQc.AobH.V7aAyzLmSvaMnJ0NO";
 const BIN_URL=`https://api.jsonbin.io/v3/b/${BIN_ID}`;
-let binData=null,isLoading=true,tapCount=0,tapTimer=null;
+let binData=null, isLoading=true, tapCount=0, tapTimer=null;
 
 async function loadData(){
+  const loadingEl = document.getElementById('loading');
   try{
-    const r=await fetch(BIN_URL,{headers:{"X-Master-Key":API_KEY}});
-    if(!r.ok) throw new Error(`HTTP ${r.status}`);
-    binData=(await r.json()).record;
-    isLoading=false;document.getElementById('loading').remove();
-  }catch(e){alert("❌ Failed to load data."); console.error(e);}
+    const res = await fetch(BIN_URL, { headers: { "X-Master-Key": API_KEY } });
+    if(!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+    const json = await res.json();
+    console.log("Raw JSON:", json);
+    if(!json.record) throw new Error("No 'record' found in JSON. Check your bin structure!");
+    binData = json.record;
+    isLoading = false;
+    loadingEl.remove();
+    console.log("Data loaded:", binData);
+  } catch(e){
+    console.error("Failed to load data:", e);
+    loadingEl.innerText = `❌ Failed to load data:\n${e.message}`;
+  }
 }
+
 loadData();
 
-function completeStep(step,link){
+function completeStep(step, link){
   window.open(link,"_blank");
-  const el=document.getElementById("step"+step);
+  const el = document.getElementById("step"+step);
   el.classList.add("done");
   setTimeout(()=>{
     if(step===1) document.getElementById("step2").style.display="block";
@@ -111,24 +111,24 @@ function startApp(){
   document.getElementById("loginBox").style.display="block";
 }
 
-document.getElementById("unlockBtn").onclick=()=>{
-  if(isLoading){showToast("⏳ Loading...");return;}
-  const val=document.getElementById("passwordInput").value.trim();
-  if(val===binData.keys.toolkit){
+document.getElementById("unlockBtn").onclick = () => {
+  if(isLoading){ showToast("⏳ Loading..."); return; }
+  const val = document.getElementById("passwordInput").value.trim();
+  if(val === binData.keys.toolkit){
     document.getElementById("loginBox").style.display="none";
     document.getElementById("toolSection").style.display="block";
     renderCategories();
-  }else showToast("❌ Invalid access code!");
+  } else showToast("❌ Invalid access code!");
 };
 
 function renderCategories(){
-  const c=document.getElementById("categoriesList"); c.innerHTML="";
-  binData.categories.forEach(cat=>{
-    const cd=document.createElement("div"); cd.className="category";
-    cd.innerHTML=`<span>${cat.name}</span><span>▼</span>`;
-    const td=document.createElement("div"); td.className="tools";
-    cat.tools.forEach(tool=>{
-      const btn=document.createElement("button");
+  const c = document.getElementById("categoriesList"); c.innerHTML = "";
+  binData.categories.forEach(cat => {
+    const cd = document.createElement("div"); cd.className="category";
+    cd.innerHTML = `<span>${cat.name}</span><span>▼</span>`;
+    const td = document.createElement("div"); td.className="tools";
+    cat.tools.forEach(tool => {
+      const btn = document.createElement("button");
       btn.textContent = tool.name;
       btn.onclick = (e) => {
         e.stopPropagation();
@@ -138,16 +138,21 @@ function renderCategories(){
       };
       td.appendChild(btn);
     });
-    cd.onclick=()=>td.style.display=td.style.display==="flex"?"none":"flex";
+    cd.onclick = () => td.style.display = td.style.display==="flex"?"none":"flex";
     c.appendChild(cd); c.appendChild(td);
   });
 }
 
-function openModal(t){document.getElementById("modalContent").innerText=t; document.getElementById("modal").style.display="flex";}
-function closeModal(){document.getElementById("modal").style.display="none";}
-function copyModalText(){navigator.clipboard.writeText(document.getElementById("modalContent").innerText).then(()=>showToast("✅ Copied"));}
-function showToast(m){const t=document.getElementById("toast"); t.textContent=m; t.style.display="block"; setTimeout(()=>t.style.display="none",1500);}
-document.getElementById("secretZone").onclick=()=>{tapCount++; clearTimeout(tapTimer); tapTimer=setTimeout(()=>tapCount=0,5000); if(tapCount>=10) location.href="admin.html";};
+function openModal(t){ document.getElementById("modalContent").innerText = t; document.getElementById("modal").style.display="flex"; }
+function closeModal(){ document.getElementById("modal").style.display="none"; }
+function copyModalText(){ navigator.clipboard.writeText(document.getElementById("modalContent").innerText).then(()=>showToast("✅ Copied")); }
+function showToast(m){ const t = document.getElementById("toast"); t.textContent = m; t.style.display="block"; setTimeout(()=>t.style.display="none",1500); }
+
+document.getElementById("secretZone").onclick = () => {
+  tapCount++; clearTimeout(tapTimer);
+  tapTimer = setTimeout(()=>tapCount=0,5000);
+  if(tapCount>=10) location.href="admin.html";
+};
 </script>
 </body>
 </html>
