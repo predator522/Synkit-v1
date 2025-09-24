@@ -60,8 +60,8 @@
 </footer>
 
 <script>
-const BIN_ID = "68c594c143b1c97be941e086";
-const API_KEY = "$2a$10$eUZ7SJvj.U.Qyt/ckC6qUOSLgjgAmrnPhuoAMdkA38SwyHdJf86FW";
+const BIN_ID = "68d3ae8ed0ea881f4088e97d";
+const API_KEY = "$2a$10$WU9EPi5LbC9ImvrT7UMbUe/5OEEKQc.AobH.V7aAyzLmSvaMnJ0NO";
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 let binData = null;
 let isLoading = true;
@@ -85,7 +85,7 @@ async function loadData() {
 function checkAdmin(){
     if(isLoading){ alert("⏳ Loading data..."); return; }
     let input = document.getElementById("adminPass").value;
-    if(input===binData.keys.admin){
+    if(input===binData.keys.adp){
         document.getElementById("loginBox").style.display="none";
         document.getElementById("adminContent").style.display="block";
         renderCategoryOptions();
