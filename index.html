@@ -6,232 +6,31 @@
 <title>Synkit Tools</title>
 <style>
 /* --- Base / layout --- */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: 'Roboto', sans-serif;
-  background: linear-gradient(to bottom, #2b003d 0%, #1a1a2e 60%, #3b0a54 100%);
-  color: #fff;
-  overflow-x: hidden;
-}
-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 100vh;
-}
-
-/* --- Header --- */
-header {
-  width: 100%;
-  padding: 20px;
-  background: linear-gradient(90deg, #00bfff, #6a0dad);
-  text-align: center;
-  font-size: 32px;
-  font-weight: 700;
-  color: #fff;
-  text-shadow: 0 0 5px #fff, 0 0 10px #6a0dad, 0 0 20px #00bfff;
-  border-bottom-left-radius: 40px;
-  border-bottom-right-radius: 40px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-}
-
-/* --- Main container --- */
-.container {
-  width: 90%;
-  max-width: 700px;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 25px;
-  border-radius: 50px;
-  box-shadow: 0 0 25px rgba(106, 13, 173, 0.5);
-  backdrop-filter: blur(10px);
-  margin-top: 40px;
-}
-
-/* --- Inputs & buttons --- */
-input, button {
-  width: 100%;
-  padding: 14px;
-  margin: 10px 0;
-  border-radius: 50px;
-  font-size: 16px;
-  box-sizing: border-box;
-}
-input {
-  border: 2px solid #6a0dad;
-  background: rgba(255,255,255,0.05);
-  color: #fff;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-input:focus {
-  outline: none;
-  border-color: #00bfff;
-  box-shadow: 0 0 12px #00bfff;
-}
-button {
-  background: linear-gradient(45deg, #6a0dad, #00bfff);
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  transition: 0.3s;
-  box-shadow: 0 0 12px rgba(0,191,255,0.5);
-}
-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 18px rgba(0,191,255,0.8);
-}
-
-/* --- Categories / tools --- */
-.category {
-  background: rgba(255,255,255,0.1);
-  margin: 8px 0;
-  padding: 14px 20px;
-  border-radius: 50px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: 0.3s;
-  box-shadow: 0 0 10px rgba(106,13,173,0.3);
-}
-.category:hover {
-  background: rgba(255,255,255,0.2);
-  box-shadow: 0 0 20px rgba(0,191,255,0.6);
-}
-.category-name {
-  font-weight: 600;
-  font-size: 18px;
-}
-.tools {
-  display: none;
-  flex-direction: column;
-  margin-top: 8px;
-  overflow: hidden;
-}
-.tool-item {
-  margin: 5px 0;
-}
-.tool-item button {
-  border-radius: 50px;
-  padding: 12px 20px;
-  font-weight: 500;
-  font-size: 16px;
-  background: linear-gradient(45deg, #00bfff, #6a0dad);
-  box-shadow: 0 0 10px rgba(106,13,173,0.5);
-  transition: 0.3s;
-}
-.tool-item button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(0,191,255,0.8);
-}
-
-/* --- Modal --- */
-#modal {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.95);
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  padding: 20px;
-  box-sizing: border-box;
-  z-index: 1000;
-}
-#modalInner {
-  position: relative;
-  background: rgba(255,255,255,0.05);
-  padding: 25px 30px;
-  padding-top: 36px;
-  border-radius: 20px;
-  max-width: 760px;
-  width: calc(100% - 40px);
-  max-height: 80vh;
-  overflow-y: auto;
-  white-space: pre-wrap;
-  box-shadow: 0 0 25px rgba(0,191,255,0.5);
-}
-
-/* small clipboard icon */
-#copyBtn {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  font-size: 20px;
-  line-height: 1;
-  cursor: pointer;
-  color: #cfd8dc;
-  padding: 6px;
-  border-radius: 8px;
-  transition: 0.18s;
-  user-select: none;
-}
-#copyBtn:hover {
-  color: #00bfff;
-  text-shadow: 0 0 8px #00bfff;
-  transform: translateY(-2px);
-}
-#copyBtn:active {
-  transform: translateY(0);
-}
-
-/* toast */
-#toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.85);
-  color: #fff;
-  padding: 10px 14px;
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
-  display: none;
-  z-index: 2000;
-  font-size: 14px;
-}
-
-/* Loading */
-#loading {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  font-size:20px;
-  font-weight:500;
-  color:#fff;
-  position: absolute;
-  top:0; left:0;
-  width:100%;
-  background: transparent;
-  z-index: 500;
-}
-
-/* Footer */
-footer {
-  width: 100%;
-  padding: 20px;
-  background: rgba(0,0,0,0.9);
-  text-align: center;
-  font-size: 14px;
-  color: #ccc;
-  border-top: 1px solid #6a0dad;
-}
-
-/* secret zone */
-#secretZone {
-  position: fixed;
-  bottom: 10px;
-  left: 10px;
-  width: 50px;
-  height: 50px;
-  background: transparent;
-  z-index: 1000;
-}
+html, body { height: 100%; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; background: linear-gradient(to bottom, #2b003d 0%, #1a1a2e 60%, #3b0a54 100%); color: #fff; overflow-x: hidden; }
+body { display: flex; flex-direction: column; justify-content: space-between; align-items: center; min-height: 100vh; }
+header { width: 100%; padding: 20px; background: linear-gradient(90deg, #00bfff, #6a0dad); text-align: center; font-size: 32px; font-weight: 700; color: #fff; text-shadow: 0 0 5px #fff, 0 0 10px #6a0dad, 0 0 20px #00bfff; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+.container { width: 90%; max-width: 700px; background: rgba(255,255,255,0.05); padding: 25px; border-radius: 50px; box-shadow: 0 0 25px rgba(106, 13, 173, 0.5); backdrop-filter: blur(10px); margin-top: 40px; }
+input, button { width: 100%; padding: 14px; margin: 10px 0; border-radius: 50px; font-size: 16px; box-sizing: border-box; }
+input { border: 2px solid #6a0dad; background: rgba(255,255,255,0.05); color: #fff; transition: border-color 0.3s, box-shadow 0.3s; }
+input:focus { outline: none; border-color: #00bfff; box-shadow: 0 0 12px #00bfff; }
+button { background: linear-gradient(45deg, #6a0dad, #00bfff); color: #fff; border: none; cursor: pointer; font-weight: 500; transition: 0.3s; box-shadow: 0 0 12px rgba(0,191,255,0.5); }
+button:hover { transform: scale(1.05); box-shadow: 0 0 18px rgba(0,191,255,0.8); }
+.category { background: rgba(255,255,255,0.1); margin: 8px 0; padding: 14px 20px; border-radius: 50px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; box-shadow: 0 0 10px rgba(106,13,173,0.3); }
+.category:hover { background: rgba(255,255,255,0.2); box-shadow: 0 0 20px rgba(0,191,255,0.6); }
+.category-name { font-weight: 600; font-size: 18px; }
+.tools { display: none; flex-direction: column; margin-top: 8px; overflow: hidden; }
+.tool-item { margin: 5px 0; }
+.tool-item button { border-radius: 50px; padding: 12px 20px; font-weight: 500; font-size: 16px; background: linear-gradient(45deg, #00bfff, #6a0dad); box-shadow: 0 0 10px rgba(106,13,173,0.5); transition: 0.3s; }
+.tool-item button:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(0,191,255,0.8); }
+#modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; color: #fff; padding: 20px; box-sizing: border-box; z-index: 1000; }
+#modalInner { position: relative; background: rgba(255,255,255,0.05); padding: 25px 30px; padding-top: 36px; border-radius: 20px; max-width: 760px; width: calc(100% - 40px); max-height: 80vh; overflow-y: auto; white-space: pre-wrap; box-shadow: 0 0 25px rgba(0,191,255,0.5); }
+#copyBtn { position: absolute; top: 8px; right: 12px; font-size: 20px; line-height: 1; cursor: pointer; color: #cfd8dc; padding: 6px; border-radius: 8px; transition: 0.18s; user-select: none; }
+#copyBtn:hover { color: #00bfff; text-shadow: 0 0 8px #00bfff; transform: translateY(-2px); }
+#copyBtn:active { transform: translateY(0); }
+#toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); color: #fff; padding: 10px 14px; border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.6); display: none; z-index: 2000; font-size: 14px; }
+#loading { display:flex; justify-content:center; align-items:center; height:100vh; font-size:20px; font-weight:500; color:#fff; position: absolute; top:0; left:0; width:100%; background: transparent; z-index: 500; }
+footer { width: 100%; padding: 20px; background: rgba(0,0,0,0.9); text-align: center; font-size: 14px; color: #ccc; border-top: 1px solid #6a0dad; }
+#secretZone { position: fixed; bottom: 10px; left: 10px; width: 50px; height: 50px; background: transparent; z-index: 1000; }
 </style>
 </head>
 <body>
@@ -240,28 +39,24 @@ footer {
 <div id="loading">⏳ Loading...</div>
 
 <div class="container">
-  <!-- Password -->
   <div id="loginBox" style="display:none;">
     <h2>🔑 Enter Access Code</h2>
     <input id="passwordInput" type="password" placeholder="Enter access code...">
     <button id="unlockBtn">🔓 Unlock</button>
   </div>
 
-  <!-- Join flow -->
   <div id="preExplore" style="display:none; text-align:center; margin-top:20px;">
     <button id="joinGroupBtn">Join WhatsApp Group</button>
     <button id="joinChannelBtn" style="display:none;">Join WhatsApp Channel</button>
     <button id="exploreBtn" style="display:none;">Explore Tools</button>
   </div>
 
-  <!-- Tools -->
   <div id="toolSection" style="display:none;">
     <h2>🛠 Categories</h2>
     <div id="categoriesList"></div>
   </div>
 </div>
 
-<!-- Modal -->
 <div id="modal" onclick="closeModal()">
   <div id="modalInner" onclick="event.stopPropagation()">
     <span id="copyBtn" title="Copy to clipboard" onclick="copyModalText()">📋</span>
@@ -277,16 +72,12 @@ footer {
 </footer>
 
 <script>
-/* ----------------- CONFIG ----------------- */
 const BIN_ID = "68d3ae8ed0ea881f4088e97d";
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-
-/* ----------------- STATE ----------------- */
 let binData = null;
 let tapCount = 0;
 let tapTimer = null;
 
-/* ----------------- UTIL ----------------- */
 function showToast(msg, ms = 1500){
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -299,62 +90,35 @@ function showToast(msg, ms = 1500){
   }, ms);
 }
 
-function escapeHtml(text){
-  return String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-
-function openModal(content){
-  const modal = document.getElementById('modal');
-  const modalContent = document.getElementById('modalContent');
-  modalContent.innerText = content;
-  modal.style.display = 'flex';
-  modalContent.scrollTop = 0;
-}
-
+function escapeHtml(text){ return String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function openModal(content){ const modal = document.getElementById('modal'); const modalContent = document.getElementById('modalContent'); modalContent.innerText = content; modal.style.display = 'flex'; modalContent.scrollTop = 0; }
 function closeModal(){ document.getElementById('modal').style.display='none'; }
 async function copyModalText(){
-  try{
-    const text = document.getElementById('modalContent').innerText;
-    if(!text || !text.trim()){ showToast('⚠️ Nothing to copy'); return; }
-    await navigator.clipboard.writeText(text);
-    showToast('✅ Copied');
-  }catch(err){ showToast('❌ Copy failed'); console.error(err); }
+  try{ const text = document.getElementById('modalContent').innerText; if(!text || !text.trim()){ showToast('⚠️ Nothing to copy'); return; } await navigator.clipboard.writeText(text); showToast('✅ Copied'); }
+  catch(err){ showToast('❌ Copy failed'); console.error(err); }
 }
 
-/* ----------------- LOAD DATA ----------------- */
 async function loadData(){
-  try{
-    const res = await fetch(BIN_URL);
-    const data = await res.json();
-    binData = data.record;
-    document.getElementById('loading').remove();
-    document.getElementById('loginBox').style.display='block';
-  }catch(err){
-    console.error(err);
-    alert('❌ Failed to load data');
-  }
+  try{ const res = await fetch(BIN_URL); const data = await res.json(); binData = data.record; document.getElementById('loading').remove(); document.getElementById('loginBox').style.display='block'; }
+  catch(err){ console.error(err); alert('❌ Failed to load data'); }
 }
 
-/* ----------------- PASSWORD UNLOCK ----------------- */
 document.getElementById('unlockBtn').addEventListener('click', async ()=>{
   const pwd = document.getElementById('passwordInput').value.trim();
   if(!pwd){ showToast('⚠️ Enter access code'); return; }
 
   try{
-    const res = await fetch('/unlock',{
+    const res = await fetch('https://synkit-v1.vercel.app/api/unlock',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({ type:'toolkit', password:pwd })
     });
     const result = await res.json();
-    if(result.success){
-      document.getElementById('loginBox').style.display='none';
-      document.getElementById('preExplore').style.display='block';
-    }else showToast('❌ Invalid access code');
+    if(result.success){ document.getElementById('loginBox').style.display='none'; document.getElementById('preExplore').style.display='block'; }
+    else showToast('❌ Invalid access code');
   }catch(err){ console.error(err); showToast('❌ Server error'); }
 });
 
-/* ----------------- JOIN FLOW ----------------- */
 const joinGroupBtn = document.getElementById('joinGroupBtn');
 const joinChannelBtn = document.getElementById('joinChannelBtn');
 const exploreBtn = document.getElementById('exploreBtn');
@@ -371,7 +135,6 @@ joinChannelBtn.addEventListener('click', ()=>{
 
 exploreBtn.addEventListener('click', ()=>{ document.getElementById('toolSection').style.display='block'; });
 
-/* ----------------- RENDER TOOLS ----------------- */
 function safeHasLink(tool){ return !!(tool.link && String(tool.link).trim() !== ""); }
 function getToolContent(tool){ return (tool.text ?? tool.content ?? tool.body ?? "").toString(); }
 
@@ -394,10 +157,8 @@ function renderCategories(){
         e.stopPropagation();
         const hasLink=safeHasLink(tool);
         const content=getToolContent(tool).trim();
-        if(hasLink && content){
-          if(confirm('This item has both a link and instructions.\n\nPress OK to view instructions, Cancel to open the link')) openModal(content);
-          else window.open(tool.link,'_blank');
-        } else if(hasLink) window.open(tool.link,'_blank');
+        if(hasLink && content){ if(confirm('This item has both a link and instructions.\n\nPress OK to view instructions, Cancel to open the link')) openModal(content); else window.open(tool.link,'_blank'); }
+        else if(hasLink) window.open(tool.link,'_blank');
         else if(content) openModal(content);
         else openModal('⚠️ No content available for this tool.');
       });
@@ -410,14 +171,12 @@ function renderCategories(){
   });
 }
 
-/* ----------------- SECRET TAP ----------------- */
 document.getElementById('secretZone').addEventListener('click', ()=>{
   tapCount++; clearTimeout(tapTimer);
   tapTimer=setTimeout(()=>{tapCount=0;},5000);
   if(tapCount>=10){ window.location.href='admin.html'; }
 });
 
-/* ----------------- INIT ----------------- */
 loadData();
 </script>
 </body>
