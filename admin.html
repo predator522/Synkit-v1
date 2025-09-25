@@ -35,6 +35,7 @@
 <div id="adminContent" class="container" style="display:none;">
     <h2>✅ Welcome, Admin</h2>
     <button onclick="logout()">Logout</button>
+    <button onclick="resetOnboarding()">Reset Onboarding</button>
 
     <h3>Manage Categories</h3>
     <input type="text" id="newCategory" placeholder="New category name">
@@ -60,8 +61,8 @@
 </footer>
 
 <script>
-const BIN_ID = "68d3ae8ed0ea881f4088e97d";  // ✅ Your new bin
-const API_KEY = "$2a$10$WU9EPi5LbC9ImvrT7UMbUe/5OEEKQc.AobH.V7aAyzLmSvaMnJ0NO"; // ✅ Your new master key
+const BIN_ID = "68d3ae8ed0ea881f4088e97d";  
+const API_KEY = "$2a$10$WU9EPi5LbC9ImvrT7UMbUe/5OEEKQc.AobH.V7aAyzLmSvaMnJ0NO"; 
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 let binData = null;
 let isLoading = true;
@@ -72,7 +73,7 @@ async function loadData() {
         let res = await fetch(BIN_URL,{headers:{"X-Master-Key":API_KEY}});
         if(!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         let data = await res.json();
-        binData = data.record; // JSONBin stores data inside .record
+        binData = data.record; 
         isLoading=false;
         document.getElementById("loading").style.display="none";
         document.getElementById("loginBox").style.display="block";
@@ -97,6 +98,11 @@ function logout(){
     document.getElementById("adminContent").style.display="none";
     document.getElementById("loginBox").style.display="block";
     document.getElementById("adminPass").value="";
+}
+
+function resetOnboarding(){
+    localStorage.removeItem("onboardingDone");
+    alert("✅ Onboarding reset. Users will see join flow again.");
 }
 
 function renderCategoryOptions(){
@@ -142,23 +148,49 @@ function renderTools(){
     let container=document.getElementById("toolsList");
     container.innerHTML="";
     binData.categories.forEach(cat=>{
-        container.innerHTML+=`<h4>${cat.name}</h4>`;
+        let catHeader=document.createElement("h4");
+        catHeader.textContent=cat.name;
+        container.appendChild(catHeader);
+
         cat.tools.forEach((t,i)=>{
-            container.innerHTML+=`
-            <div class="tool-item">
-                <span>${t.name}</span>
-                <div class="tool-actions">
-                    <button onclick="${t.link?`window.open('${t.link}','_blank')`:`showContent('${encodeURIComponent(t.content)}')`}">Open</button>
-                    <button onclick="editTool('${cat.name}',${i})">✏️ Edit</button>
-                    <button onclick="deleteTool('${cat.name}',${i})">🗑 Delete</button>
-                </div>
-            </div>`;
+            let div=document.createElement("div");
+            div.className="tool-item";
+
+            let name=document.createElement("span");
+            name.textContent=t.name;
+
+            let actions=document.createElement("div");
+            actions.className="tool-actions";
+
+            let openBtn=document.createElement("button");
+            openBtn.textContent="Open";
+            openBtn.onclick=()=>{
+                if(t.link) window.open(t.link,"_blank");
+                else if(t.content) showContent(t.content);
+                else alert("⚠️ No content");
+            };
+
+            let editBtn=document.createElement("button");
+            editBtn.textContent="✏️ Edit";
+            editBtn.onclick=()=>editTool(cat.name,i);
+
+            let delBtn=document.createElement("button");
+            delBtn.textContent="🗑 Delete";
+            delBtn.onclick=()=>deleteTool(cat.name,i);
+
+            actions.appendChild(openBtn);
+            actions.appendChild(editBtn);
+            actions.appendChild(delBtn);
+
+            div.appendChild(name);
+            div.appendChild(actions);
+            container.appendChild(div);
         });
     });
 }
 
 function showContent(content){
-    document.getElementById("modalContent").textContent=decodeURIComponent(content);
+    document.getElementById("modalContent").textContent=content;
     document.getElementById("modal").style.display="flex";
 }
 
