@@ -60,207 +60,200 @@
     <p>Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
 </footer>
 
-<!-- Add CryptoJS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-<script>  
-const BIN_ID = "68d3ae8ed0ea881f4088e97d";    
-const API_KEY = "$2a$10$WU9EPi5LbC9ImvrT7UMbUe/5OEEKQc.AobH.V7aAyzLmSvaMnJ0NO";   
-const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;  
-const SECRET_KEY = "SynkitV1-Key"; // must match index.html decryption  
+<script>
+const BIN_ID = "68d3ae8ed0ea881f4088e97d";
+const API_KEY = "$2a$10$WU9EPi5LbC9ImvrT7UMbUe/5OEEKQc.AobH.V7aAyzLmSvaMnJ0NO";
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+let binData = null;
+let isLoading = true;
 
-let binData = null;  
-let isLoading = true;  
+const ENC_KEY = "ZTShadowKey2025"; // 🔑 Secret key (change it!)
 
-// 🔒 Encrypt helper
-function encryptData(text){
-    return CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
+/* Simple XOR + base64 */
+function encrypt(str) {
+  return btoa([...str].map((c, i) =>
+    String.fromCharCode(c.charCodeAt(0) ^ ENC_KEY.charCodeAt(i % ENC_KEY.length))
+  ).join(""));
+}
+function decrypt(str) {
+  try {
+    return atob(str).split("").map((c, i) =>
+      String.fromCharCode(c.charCodeAt(0) ^ ENC_KEY.charCodeAt(i % ENC_KEY.length))
+    ).join("");
+  } catch {
+    return str; // if not encrypted
+  }
 }
 
-async function loadData(){  
-    document.getElementById("loading").style.display="flex";  
-    try {  
-        let res = await fetch(BIN_URL,{headers:{"X-Master-Key":API_KEY}});  
-        if(!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);  
-        let data = await res.json();  
-        binData = data.record;   
-        isLoading=false;  
-        document.getElementById("loading").style.display="none";  
-        document.getElementById("loginBox").style.display="block";  
-    } catch(e) {  
-        console.error("Load failed",e);  
-        alert("❌ Failed to load data. Refresh page.");  
-    }  
-}  
+async function loadData() {
+  document.getElementById("loading").style.display = "flex";
+  try {
+    let res = await fetch(BIN_URL, { headers: { "X-Master-Key": API_KEY } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    let data = await res.json();
+    binData = data.record;
+    isLoading = false;
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("loginBox").style.display = "block";
+  } catch (e) {
+    console.error("Load failed", e);
+    alert("❌ Failed to load data. Refresh page.");
+  }
+}
 
-function checkAdmin(){  
-    if(isLoading){ alert("⏳ Loading data..."); return; }  
-    let input = document.getElementById("adminPass").value.trim();  
-    if(input===binData.keys.admin){  
-        document.getElementById("loginBox").style.display="none";  
-        document.getElementById("adminContent").style.display="block";  
-        renderCategoryOptions();  
-        renderTools();  
-    } else { alert("❌ Invalid master key!"); }  
-}  
+function checkAdmin() {
+  if (isLoading) { alert("⏳ Loading data..."); return; }
+  let input = document.getElementById("adminPass").value.trim();
+  if (input === binData.keys.admin) {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("adminContent").style.display = "block";
+    renderCategoryOptions();
+    renderTools();
+  } else { alert("❌ Invalid master key!"); }
+}
 
-function logout(){  
-    document.getElementById("adminContent").style.display="none";  
-    document.getElementById("loginBox").style.display="block";  
-    document.getElementById("adminPass").value="";  
-}  
+function logout() {
+  document.getElementById("adminContent").style.display = "none";
+  document.getElementById("loginBox").style.display = "block";
+  document.getElementById("adminPass").value = "";
+}
 
-function resetOnboarding(){  
-    localStorage.removeItem("onboardingDone");  
-    alert("✅ Onboarding reset. Users will see join flow again.");  
-}  
+function renderCategoryOptions() {
+  let select = document.getElementById("categorySelect");
+  select.innerHTML = "";
+  binData.categories.forEach(cat => {
+    let option = document.createElement("option");
+    option.value = cat.name;
+    option.textContent = decrypt(cat.name); // 🔓 Decrypt category names
+    select.appendChild(option);
+  });
+}
 
-function renderCategoryOptions(){  
-    let select = document.getElementById("categorySelect");  
-    select.innerHTML="";  
-    binData.categories.forEach(cat=>{  
-        let option=document.createElement("option");  
-        option.value=cat.name;  
-        option.textContent=cat.name;  
-        select.appendChild(option);  
-    });  
-}  
+async function addCategory() {
+  let name = document.getElementById("newCategory").value.trim();
+  if (!name) return alert("Enter category name");
+  if (binData.categories.some(c => decrypt(c.name) === name)) return alert("Category exists");
+  binData.categories.push({ name: encrypt(name), tools: [] }); // 🔒 Encrypt
+  await saveData("✅ Category added!");
+  document.getElementById("newCategory").value = "";
+  renderCategoryOptions();
+  renderTools();
+}
 
-async function addCategory(){  
-    let name=document.getElementById("newCategory").value.trim();  
-    if(!name) return alert("Enter category name");  
-    if(binData.categories.some(c=>c.name===name)) return alert("Category exists");  
+async function addTool() {
+  let catName = document.getElementById("categorySelect").value;
+  let name = document.getElementById("toolName").value.trim();
+  let link = document.getElementById("toolLink").value.trim();
+  let content = document.getElementById("toolContent").value.trim();
+  if (!name) return alert("Enter tool name");
+  if (!link && !content) return alert("Enter link or content");
+  let category = binData.categories.find(c => c.name === catName);
+  if (category.tools.some(t => decrypt(t.name) === name)) return alert("Tool exists in this category");
+  category.tools.push({
+    name: encrypt(name),
+    link: link ? encrypt(link) : "",
+    content: content ? encrypt(content) : ""
+  });
+  await saveData("✅ Tool added!");
+  document.getElementById("toolName").value = "";
+  document.getElementById("toolLink").value = "";
+  document.getElementById("toolContent").value = "";
+  renderTools();
+}
 
-    // 🔒 Encrypt category name
-    binData.categories.push({name:encryptData(name),tools:[]});  
-    await saveData("✅ Category added!");  
-    document.getElementById("newCategory").value="";  
-    renderCategoryOptions();  
-    renderTools();  
-}  
+function renderTools() {
+  let container = document.getElementById("toolsList");
+  container.innerHTML = "";
+  binData.categories.forEach(cat => {
+    let catHeader = document.createElement("h4");
+    catHeader.textContent = decrypt(cat.name); // 🔓 Show decrypted
+    container.appendChild(catHeader);
 
-async function addTool(){  
-    let catName=document.getElementById("categorySelect").value;  
-    let name=document.getElementById("toolName").value.trim();  
-    let link=document.getElementById("toolLink").value.trim();  
-    let content=document.getElementById("toolContent").value.trim();  
+    cat.tools.forEach((t, i) => {
+      let div = document.createElement("div");
+      div.className = "tool-item";
 
-    if(!name) return alert("Enter tool name");  
-    if(!link && !content) return alert("Enter link or content");  
+      let name = document.createElement("span");
+      name.textContent = decrypt(t.name);
 
-    let category=binData.categories.find(c=>c.name===catName);  
+      let actions = document.createElement("div");
+      actions.className = "tool-actions";
 
-    // 🔒 Encrypt fields
-    category.tools.push({
-        name:encryptData(name),
-        link: link?encryptData(link):"",
-        content: content?encryptData(content):""
-    });  
+      let openBtn = document.createElement("button");
+      openBtn.textContent = "Open";
+      openBtn.onclick = () => {
+        if (t.link) window.open(decrypt(t.link), "_blank");
+        else if (t.content) showContent(decrypt(t.content));
+        else alert("⚠️ No content");
+      };
 
-    await saveData("✅ Tool added!");  
-    document.getElementById("toolName").value="";  
-    document.getElementById("toolLink").value="";  
-    document.getElementById("toolContent").value="";  
-    renderTools();  
-}  
+      let editBtn = document.createElement("button");
+      editBtn.textContent = "✏️ Edit";
+      editBtn.onclick = () => editTool(cat.name, i);
 
-function renderTools(){  
-    let container=document.getElementById("toolsList");  
-    container.innerHTML="";  
-    binData.categories.forEach(cat=>{  
-        let catHeader=document.createElement("h4");  
-        catHeader.textContent=cat.name; // ⚠️ still encrypted (admin sees raw)  
-        container.appendChild(catHeader);  
+      let delBtn = document.createElement("button");
+      delBtn.textContent = "🗑 Delete";
+      delBtn.onclick = () => deleteTool(cat.name, i);
 
-        cat.tools.forEach((t,i)=>{  
-            let div=document.createElement("div");  
-            div.className="tool-item";  
+      actions.appendChild(openBtn);
+      actions.appendChild(editBtn);
+      actions.appendChild(delBtn);
 
-            let name=document.createElement("span");  
-            name.textContent=t.name; // ⚠️ still encrypted (admin sees raw)  
+      div.appendChild(name);
+      div.appendChild(actions);
+      container.appendChild(div);
+    });
+  });
+}
 
-            let actions=document.createElement("div");  
-            actions.className="tool-actions";  
+function showContent(content) {
+  document.getElementById("modalContent").textContent = decrypt(content);
+  document.getElementById("modal").style.display = "flex";
+}
 
-            let openBtn=document.createElement("button");  
-            openBtn.textContent="Open";  
-            openBtn.onclick=()=>{  
-                if(t.link) window.open(t.link,"_blank");  
-                else if(t.content) showContent(t.content);  
-                else alert("⚠️ No content");  
-            };  
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
 
-            let editBtn=document.createElement("button");  
-            editBtn.textContent="✏️ Edit";  
-            editBtn.onclick=()=>editTool(cat.name,i);  
+async function editTool(catName, index) {
+  let category = binData.categories.find(c => c.name === catName);
+  let tool = category.tools[index];
+  let newName = prompt("Enter new name:", decrypt(tool.name));
+  let newLink = prompt("Enter new link:", decrypt(tool.link));
+  let newContent = prompt("Enter new content:", decrypt(tool.content));
+  if (!newName) return;
+  tool.name = encrypt(newName);
+  tool.link = newLink ? encrypt(newLink) : "";
+  tool.content = newContent ? encrypt(newContent) : "";
+  await saveData("✅ Tool updated!");
+  renderTools();
+}
 
-            let delBtn=document.createElement("button");  
-            delBtn.textContent="🗑 Delete";  
-            delBtn.onclick=()=>deleteTool(cat.name,i);  
+async function deleteTool(catName, index) {
+  if (!confirm("Are you sure?")) return;
+  let category = binData.categories.find(c => c.name === catName);
+  category.tools.splice(index, 1);
+  await saveData("✅ Tool deleted!");
+  renderTools();
+}
 
-            actions.appendChild(openBtn);  
-            actions.appendChild(editBtn);  
-            actions.appendChild(delBtn);  
+async function saveData(msg) {
+  try {
+    await fetch(BIN_URL, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Master-Key": API_KEY
+      },
+      body: JSON.stringify(binData)
+    });
+    alert(msg);
+  } catch (e) {
+    alert("❌ Update failed: " + e.message);
+  }
+}
 
-            div.appendChild(name);  
-            div.appendChild(actions);  
-            container.appendChild(div);  
-        });  
-    });  
-}  
-
-function showContent(content){  
-    document.getElementById("modalContent").textContent=content;  
-    document.getElementById("modal").style.display="flex";  
-}  
-
-function closeModal(){  
-    document.getElementById("modal").style.display="none";  
-}  
-
-async function editTool(catName,index){  
-    let category=binData.categories.find(c=>c.name===catName);  
-    let tool=category.tools[index];  
-
-    let newName=prompt("Enter new name:");  
-    let newLink=prompt("Enter new link:");  
-    let newContent=prompt("Enter new content:");  
-
-    if(!newName) return;  
-
-    // 🔒 Save encrypted
-    tool.name=encryptData(newName);  
-    tool.link=newLink?encryptData(newLink):"";  
-    tool.content=newContent?encryptData(newContent):"";  
-
-    await saveData("✅ Tool updated!");  
-    renderTools();  
-}  
-
-async function deleteTool(catName,index){  
-    if(!confirm("Are you sure?")) return;  
-    let category=binData.categories.find(c=>c.name===catName);  
-    category.tools.splice(index,1);  
-    await saveData("✅ Tool deleted!");  
-    renderTools();  
-}  
-
-async function saveData(msg){  
-    try{  
-        await fetch(BIN_URL,{  
-            method:"PUT",  
-            headers:{  
-                "Content-Type":"application/json",  
-                "X-Master-Key":API_KEY  
-            },  
-            body:JSON.stringify(binData)  
-        });  
-        alert(msg);  
-    }catch(e){  
-        alert("❌ Update failed: "+e.message);  
-    }  
-}  
-
-loadData();  
+loadData();
 </script>
 </body>
 </html>
