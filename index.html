@@ -80,106 +80,88 @@ footer {width:100%; padding:20px; background:rgba(0,0,0,0.9); text-align:center;
   <p>Developed by Dev F̸A̸C̸ ShΔdow | All rights reserved 2025</p>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-<script>
-const BIN_ID="68d3ae8ed0ea881f4088e97d";
-const API_KEY="$2a$10$WU9EPi5LbC9ImvrT7UMbUe/5OEEKQc.AobH.V7aAyzLmSvaMnJ0NO";
-const BIN_URL=`https://api.jsonbin.io/v3/b/${BIN_ID}`;
-const SECRET_KEY="SynkitV1-Key"; // must match admin.html encryption
-let binData=null,isLoading=true,tapCount=0,tapTimer=null;
-
-// 🔐 Decrypt helper
-function decryptData(ciphertext){
-  try {
-    const bytes=CryptoJS.AES.decrypt(ciphertext,SECRET_KEY);
-    return bytes.toString(CryptoJS.enc.Utf8);
-  } catch(e){
-    console.error("Decryption error:",e);
-    return ciphertext;
-  }
-}
-
-async function loadData(){
-  const loadingEl=document.getElementById('loading');
-  try{
-    const res=await fetch(BIN_URL,{headers:{"X-Master-Key":API_KEY}});
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json=await res.json();
-    if(!json.record) throw new Error("No 'record' found in JSON");
-    binData=json.record;
-    isLoading=false;
-    loadingEl.remove();
-
-    // Skip onboarding if already done
-    if(localStorage.getItem("onboardingDone")){
-      document.getElementById("onboarding").style.display="none";
-      document.getElementById("loginBox").style.display="block";
-    }
-  }catch(e){
-    console.error(e);
-    loadingEl.innerText="❌ Failed to load data: "+e.message;
-  }
-}
-loadData();
-
-function completeStep(step,link){
-  window.open(link,"_blank");
-  const el=document.getElementById("step"+step);
-  el.classList.add("done");
-  setTimeout(()=>{
-    if(step===1) document.getElementById("step2").style.display="block";
-    if(step===2) document.getElementById("step3").style.display="block";
-  },2000);
-}
-
-function startApp(){
-  localStorage.setItem("onboardingDone","true");
-  document.getElementById("onboarding").style.display="none";
-  document.getElementById("loginBox").style.display="block";
-}
-
-document.getElementById("unlockBtn").onclick=()=>{
-  if(isLoading){showToast("⏳ Loading...");return;}
-  const val=document.getElementById("passwordInput").value.trim();
-  if(val===binData.keys.toolkit){
-    document.getElementById("loginBox").style.display="none";
-    document.getElementById("toolSection").style.display="block";
-    renderCategories();
-  }else showToast("❌ Invalid access code!");
-};
-
-function renderCategories(){
-  const c=document.getElementById("categoriesList");c.innerHTML="";
-  binData.categories.forEach(cat=>{
-    const catName=decryptData(cat.name); // 🔓 decrypt category name
-    const cd=document.createElement("div");cd.className="category";
-    cd.innerHTML=`<span>${catName}</span><span>▼</span>`;
-    const td=document.createElement("div");td.className="tools";
-    cat.tools.forEach(tool=>{
-      const toolName=decryptData(tool.name);
-      const toolContent=tool.content?decryptData(tool.content):null;
-      const toolLink=tool.link?decryptData(tool.link):null;
-
-      const btn=document.createElement("button");
-      btn.textContent=toolName;
-      btn.onclick=(e)=>{
-        e.stopPropagation();
-        if(toolLink) window.open(toolLink,"_blank");
-        else if(toolContent) openModal(toolContent);
-        else openModal("⚠️ No content.");
-      };
-      td.appendChild(btn);
-    });
-    cd.onclick=()=>td.style.display=td.style.display==="flex"?"none":"flex";
-    c.appendChild(cd);c.appendChild(td);
-  });
-}
-
-function openModal(t){document.getElementById("modalContent").innerText=t;document.getElementById("modal").style.display="flex";}
-function closeModal(){document.getElementById("modal").style.display="none";}
-function copyModalText(){navigator.clipboard.writeText(document.getElementById("modalContent").innerText).then(()=>showToast("✅ Copied"));}
-function showToast(m){const t=document.getElementById("toast");t.textContent=m;t.style.display="block";setTimeout(()=>t.style.display="none",1500);}
-document.getElementById("secretZone").onclick=()=>{tapCount++;clearTimeout(tapTimer);tapTimer=setTimeout(()=>tapCount=0,5000);if(tapCount>=10)location.href="admin.html";};
-</script>
+  <script>  
+const BIN_ID="68d3ae8ed0ea881f4088e97d";  
+const API_KEY="$2a$10$WU9EPi5LbC9ImvrT7UMbUe/5OEEKQc.AobH.V7aAyzLmSvaMnJ0NO";  
+const BIN_URL=`https://api.jsonbin.io/v3/b/${BIN_ID}`;  
+let binData=null,isLoading=true,tapCount=0,tapTimer=null;  
+  
+async function loadData(){  
+  const loadingEl = document.getElementById('loading');  
+  try{  
+    const res = await fetch(BIN_URL,{headers:{"X-Master-Key":API_KEY}});  
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);  
+    const json = await res.json();  
+    if(!json.record) throw new Error("No 'record' found in JSON");  
+    binData=json.record;  
+    isLoading=false;  
+    loadingEl.remove();  
+  
+    // 👇 Skip onboarding if already done  
+    if(localStorage.getItem("onboardingDone")){  
+      document.getElementById("onboarding").style.display="none";  
+      document.getElementById("loginBox").style.display="block";  
+    }  
+  }catch(e){  
+    console.error(e);  
+    loadingEl.innerText="❌ Failed to load data: "+e.message;  
+  }  
+}  
+loadData();  
+  
+function completeStep(step,link){  
+  window.open(link,"_blank");  
+  const el=document.getElementById("step"+step);  
+  el.classList.add("done");  
+  setTimeout(()=>{  
+    if(step===1) document.getElementById("step2").style.display="block";  
+    if(step===2) document.getElementById("step3").style.display="block";  
+  },2000);  
+}  
+  
+function startApp(){  
+  localStorage.setItem("onboardingDone","true"); // ✅ Remember completion  
+  document.getElementById("onboarding").style.display="none";  
+  document.getElementById("loginBox").style.display="block";  
+}  
+  
+document.getElementById("unlockBtn").onclick=()=>{  
+  if(isLoading){showToast("⏳ Loading...");return;}  
+  const val=document.getElementById("passwordInput").value.trim();  
+  if(val===binData.keys.toolkit){  
+    document.getElementById("loginBox").style.display="none";  
+    document.getElementById("toolSection").style.display="block";  
+    renderCategories();  
+  }else showToast("❌ Invalid access code!");  
+};  
+  
+function renderCategories(){  
+  const c=document.getElementById("categoriesList");c.innerHTML="";  
+  binData.categories.forEach(cat=>{  
+    const cd=document.createElement("div");cd.className="category";  
+    cd.innerHTML=`<span>${cat.name}</span><span>▼</span>`;  
+    const td=document.createElement("div");td.className="tools";  
+    cat.tools.forEach(tool=>{  
+      const btn=document.createElement("button");  
+      btn.textContent=tool.name;  
+      btn.onclick=(e)=>{  
+        e.stopPropagation();  
+        if(tool.link) window.open(tool.link,"_blank");  
+        else if(tool.content||tool.text) openModal(tool.content||tool.text);  
+        else openModal("⚠️ No content.");  
+      };  
+      td.appendChild(btn);  
+    });  
+    cd.onclick=()=>td.style.display=td.style.display==="flex"?"none":"flex";  
+    c.appendChild(cd);c.appendChild(td);  
+  });  
+}  
+  
+function openModal(t){document.getElementById("modalContent").innerText=t;document.getElementById("modal").style.display="flex";}  
+function closeModal(){document.getElementById("modal").style.display="none";}  
+function copyModalText(){navigator.clipboard.writeText(document.getElementById("modalContent").innerText).then(()=>showToast("✅ Copied"));}  
+function showToast(m){const t=document.getElementById("toast");t.textContent=m;t.style.display="block";setTimeout(()=>t.style.display="none",1500);}  
+document.getElementById("secretZone").onclick=()=>{tapCount++;clearTimeout(tapTimer);tapTimer=setTimeout(()=>tapCount=0,5000);if(tapCount>=10)location.href="admin.html";};  
+  </script>
 </body>
 </html>
